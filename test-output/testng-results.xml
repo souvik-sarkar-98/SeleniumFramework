@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="5" passed="5" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2021-03-29T17:56:21Z" name="Default suite" finished-at="2021-03-29T17:56:38Z" duration-ms="16702">
+    <groups>
+    </groups>
+    <test started-at="2021-03-29T17:56:21Z" name="Default test" finished-at="2021-03-29T17:56:38Z" duration-ms="16702">
+      <class name="spicejet.NewTest">
+        <test-method is-config="true" signature="setUpTest()[pri:0, instance:spicejet.NewTest@6a01e23]" started-at="2021-03-29T17:56:21Z" name="setUpTest" finished-at="2021-03-29T17:56:21Z" duration-ms="79" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpTest -->
+        <test-method signature="startTest()[pri:0, instance:spicejet.NewTest@6a01e23]" started-at="2021-03-29T17:56:21Z" name="startTest" finished-at="2021-03-29T17:56:32Z" duration-ms="10819" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- startTest -->
+        <test-method signature="executeKeyword(java.lang.String)[pri:1, instance:spicejet.NewTest@6a01e23]" started-at="2021-03-29T17:56:32Z" name="executeKeyword" data-provider="fetchKeywords" finished-at="2021-03-29T17:56:35Z" duration-ms="2810" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[OpenUrl_url-2]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- executeKeyword -->
+        <test-method signature="executeKeyword(java.lang.String)[pri:1, instance:spicejet.NewTest@6a01e23]" started-at="2021-03-29T17:56:35Z" name="executeKeyword" data-provider="fetchKeywords" finished-at="2021-03-29T17:56:35Z" duration-ms="12" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[NavigateTo_LoginPage]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- executeKeyword -->
+        <test-method signature="executeKeyword(java.lang.String)[pri:1, instance:spicejet.NewTest@6a01e23]" started-at="2021-03-29T17:56:35Z" name="executeKeyword" data-provider="fetchKeywords" finished-at="2021-03-29T17:56:38Z" duration-ms="2605" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Click_Login]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- executeKeyword -->
+        <test-method signature="endTest()[pri:2, instance:spicejet.NewTest@6a01e23]" started-at="2021-03-29T17:56:38Z" name="endTest" finished-at="2021-03-29T17:56:38Z" duration-ms="263" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- endTest -->
+      </class> <!-- spicejet.NewTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

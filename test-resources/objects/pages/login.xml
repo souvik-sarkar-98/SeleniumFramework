@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository name="LoginPage" createdOn="28/03/2021"
+	createdBy="souvik sarkar">
+	<objects>
+		<object name="username">
+			<identifier locator="id" value="username" />
+			<identifier locator="name" value="loginusername" />
+			<identifier locator="xpath" value="relation" />
+		</object>
+		<object name="password">
+			<identifier locator="xapth" value="//*ljshkajkggakgkdfjaakjlasghqwkg" />
+			<identifier locator="" value="" />
+		</object>
+		<object name="Login">
+			<identifier locator="name" value="login" />
+		</object>
+	</objects>
+</repository>
