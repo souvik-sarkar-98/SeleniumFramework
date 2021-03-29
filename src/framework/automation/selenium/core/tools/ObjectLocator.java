@@ -1,8 +1,6 @@
 package framework.automation.selenium.core.tools;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 

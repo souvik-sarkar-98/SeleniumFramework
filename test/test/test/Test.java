@@ -1,17 +1,14 @@
-package spicejet;
+package test.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.openqa.selenium.By;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -73,7 +70,7 @@ public class Test {
 		//XMLUtil p=new XMLUtil(nodes.item(0).getTextContent());
 		//nodes=p.findNodeListByTags("object","name","username","identifier");
 		for(int i=0;i<nodes.getLength();i++) {
-			Element elem=(Element)nodes.item(i);
+			//Element elem=(Element)nodes.item(i);
 			//System.out.println(elem.getAttribute("locator"));;
 			//System.out.println(elem.getAttribute("value"));;
 			System.out.println(nodes.item(i).getTextContent());
