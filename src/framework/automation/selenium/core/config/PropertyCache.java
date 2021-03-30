@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -20,10 +22,15 @@ import framework.automation.selenium.core.utils.XMLUtil;
  * @purpose 
  */
 public class PropertyCache {
-	
+	static {
+		System.setProperty("log4j.configurationFile",PropertyCache.class.getResource("log4j2.xml").toString());
+		//System.setProperty("log4j.configurationFile",PropertyCache.class.getPackageName().replace(".", "/")+"/log4j2.xml");
+	}
 
 	private static XMLUtil prop;
 	private static Map<String,Object> runtime=new HashMap<String,Object>();
+    private static final Logger logger = LogManager.getLogger(PropertyCache.class);
+
 	/**
 	 * @param filePath (XML)
 	 * @throws IOException 
@@ -32,7 +39,9 @@ public class PropertyCache {
 	 * @throws XPathExpressionException 
 	 */
 	public PropertyCache(String filePath) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+		logger.always();
 		PropertyCache.prop=new XMLUtil(filePath);
+		
 	}
 
 	/**

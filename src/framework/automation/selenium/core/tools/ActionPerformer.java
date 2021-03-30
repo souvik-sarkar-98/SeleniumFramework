@@ -9,6 +9,7 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import framework.automation.selenium.core.actions.GenericTestActionLibrary;
 import framework.automation.selenium.core.config.PropertyCache;
 
 /**
@@ -27,7 +28,9 @@ public class ActionPerformer {
 	 */
 	public ActionPerformer(final WebDriver driver) throws ClassNotFoundException {
 		this.driver = driver;
-		Object[] all = PropertyCache.getProperties("ActionClasses");
+		classObjects.add(GenericTestActionLibrary.class);
+		
+		Object[] all = PropertyCache.getProperties("ExternalActionClasses");
 		for (Object className : all) {
 			if(!className.toString().isBlank()) {
 				classObjects.add(Class.forName(className.toString().trim()));

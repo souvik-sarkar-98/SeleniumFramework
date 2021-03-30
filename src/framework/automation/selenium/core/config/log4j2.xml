@@ -5,26 +5,14 @@
 			<!-- <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} 
 				- %msg%n"/> -->
 			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n" />
+				pattern="[%d{HH:mm:ss.SSS}] %highlight{%-5level %class{36} %L %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=red, DEBUG=green, TRACE=blue}" />
 
 		</Console>
-		<File name="File" fileName="${sys:logFilename}">
+		<File name="File" fileName="abc.log">
 			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n" />
+				pattern="[%d{HH:mm:ss.SSS}] %-5level %class{36} %L %M - %msg%xEx%n" />
 		</File>
-		<RollingFile name="rollingFile" fileName=".logs/test.log"
-			filePattern=".logs/yest.%d{dd-MMM-YY}.log.gz"
-			ignoreExceptions="false">
-			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n" />
-
-			<Policies>
-				<OnStartupTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="10 MB" />
-				<TimeBasedTriggeringPolicy />
-			</Policies>
-			<DefaultRolloverStrategy max="5" />
-		</RollingFile>
+		
 	</Appenders>
 	<Loggers>
 		<Root level="trace">

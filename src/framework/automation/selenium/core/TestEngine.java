@@ -1,5 +1,7 @@
 package framework.automation.selenium.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import framework.automation.selenium.core.config.PropertyCache;
@@ -15,6 +17,7 @@ import framework.automation.selenium.core.tools.KeywordProcessor;
  * @purpose 
  */
 public final class TestEngine {
+    private final Logger logger = LogManager.getLogger(this.getClass());
 	
 	private static PropertyCache prop;
 	private WebDriver driver; 
@@ -23,6 +26,7 @@ public final class TestEngine {
 	private TestDataHelper dataHelper;
 	
 	public TestEngine(String testName) throws Exception  {
+		logger.info("Start test");
 		if(TestEngine.prop==null) {
 			throw new PropertyNotConfiguredException("Property file not set for this test. use 'TestEngine.setPropertyFile(filepath)' before creating TestEngine instance.  ");
 		}
@@ -45,6 +49,7 @@ public final class TestEngine {
 	 * @date 27-Mar-2021
 	 */
 	public final void start()  throws Exception {
+		logger.info("There is some error");
 		this.browser.setBrowserName(PropertyCache.getProperty("BrowserName")==null?PropertyCache.getProperty("DefaultBrowser").toString():PropertyCache.getProperty("BrowserName").toString());
 		this.browser.setHeadless(PropertyCache.getProperty("IsHeadless")==null?false: (boolean) PropertyCache.getProperty("IsHeadless"));
 		this.browser.setIncognito(PropertyCache.getProperty("IsIncognito")==null?false: (boolean) PropertyCache.getProperty("IsIncognito"));

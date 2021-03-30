@@ -4,6 +4,14 @@
 		<description></description>
 		<value>IE</value>
 	</property>
+	<property name="ChromeDriverPath">
+		<description></description>
+		<value>.dependencies/drivers/chromedriver.exe</value>
+	</property>
+	<property name="IEDriverPath">
+		<description></description>
+		<value>.dependencies/drivers/IEDriverServer.exe</value>
+	</property>
 	<property name="DefaultWait">
 		<description></description>
 		<value>2</value>
@@ -32,9 +40,9 @@
 		<description></description>
 		<value></value>
 	</property>
-	<property name="ActionClasses">
+	<property name="ExternalActionClasses">
 		<description></description>
-		<value>framework.automation.selenium.core.actions.GenericTestActionLibrary</value>
+		<value></value>
 	</property>
 	<property name="ObjectMappingFile">
 		<description></description>

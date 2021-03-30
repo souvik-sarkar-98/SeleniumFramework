@@ -57,11 +57,15 @@ public class Browser {
 
 	
 	private WebDriver chrome() {
-		WebDriverManager.chromedriver().setup();
+		if(PropertyCache.getProperty("ChromeDriverPath")==null) {
+			WebDriverManager.chromedriver().setup();
+		}else{
+			System.setProperty("webdriver.chrome.driver", PropertyCache.getProperty("ChromeDriverPath").toString());
+		}
 		ChromeOptions options = new ChromeOptions();
 		options.setHeadless(this.isHeadless);
 		options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
-		options.setExperimentalOption("useAutomationExtension", false);;
+		options.setExperimentalOption("useAutomationExtension", false);
 
 		if(this.isIncognito) {
 			options.addArguments("incognito");
@@ -100,12 +104,17 @@ public class Browser {
 	}
 	
 	private WebDriver internetExplorer() {
-		WebDriverManager.iedriver().setup();
+		if(PropertyCache.getProperty("IEDriverPath")==null) {
+			WebDriverManager.iedriver().arch32().setup();
+		}else{
+			System.setProperty("webdriver.ie.driver", PropertyCache.getProperty("IEDriverPath").toString());
+		}
 		InternetExplorerOptions  options= new InternetExplorerOptions();
 		if(this.isIncognito) {
 			options.setCapability("InPrivate",true);
 		}
-		return new InternetExplorerDriver();
+		options.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+		return new InternetExplorerDriver(options);
 	}
 
 

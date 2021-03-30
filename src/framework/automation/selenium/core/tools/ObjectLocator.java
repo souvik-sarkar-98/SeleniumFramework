@@ -56,7 +56,7 @@ public class ObjectLocator {
 			    break;
 			} catch (NoSuchElementException e) {
 				//log it
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		if(element==null) {
