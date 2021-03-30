@@ -20,14 +20,13 @@ public final class TestEngine {
 	private WebDriver driver; 
 	private Browser browser; 
 	private KeywordProcessor interpretor;
-	private String testName;
 	private TestDataHelper dataHelper;
 	
 	public TestEngine(String testName) throws Exception  {
 		if(TestEngine.prop==null) {
 			throw new PropertyNotConfiguredException("Property file not set for this test. use 'TestEngine.setPropertyFile(filepath)' before creating TestEngine instance.  ");
 		}
-		this.testName=testName;
+		PropertyCache.setProperty("TestName", testName);
 		this.browser =new Browser();
 		this.dataHelper=new TestDataHelper();
 	}
@@ -75,7 +74,7 @@ public final class TestEngine {
 	}
 	
 	public final Object[] getKeywords()  throws Exception {
-		return this.dataHelper.getKeywords(this.testName);
+		return this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 	}
 	
 	public final void setBrowser(String browserName,boolean isHeadless,boolean isIncognito) throws NoSuchTestFoundException {

@@ -14,8 +14,6 @@ public class TestDriver {
 
 	@BeforeTest
 	public void setUpTest() throws Exception {
-		TestEngine.setPropertyFile("test-resources/spicejet/login/property.xml");
-		//TestEngine.setProperty("BrowserName", "Chrome");
 	}
 
 	@Test(priority = 0)
@@ -24,13 +22,13 @@ public class TestDriver {
 		this.engine.start();
 	}
 
-	@Test(priority = 1, dataProvider = "fetchKeywords")
+	@Test(priority = 1, dataProvider = "fetchKeywords",dependsOnMethods = {"startTest"})
 	public final void executeKeyword(String keyword) throws Exception {
 		this.engine.execute(keyword);
 
 	}
 
-	@Test(priority = 2)
+	@Test(priority = 2,dependsOnMethods = {"startTest"})
 	public final void endTest() {
 		this.engine.stop();
 	}

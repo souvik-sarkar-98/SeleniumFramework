@@ -3,13 +3,14 @@
 	createdBy="souvik sarkar">
 	<objects>
 		<object name="username">
-			<identifier locator="id" value="username" />
-			<identifier locator="name" value="loginusername" />
-			<identifier locator="xpath" value="relation" />
+			<identifier locator="id" value="email" />
+			<identifier locator="name" value="email" />
+			<identifier locator="xpath" value="//input[@id='email']" />
 		</object>
 		<object name="password">
-			<identifier locator="xapth" value="//*ljshkajkggakgkdfjaakjlasghqwkg" />
-			<identifier locator="" value="" />
+			<identifier locator="id" value="pass" />
+			<identifier locator="name" value="pass" />
+			<identifier locator="xpath" value="//input[@id='pass']" />
 		</object>
 		<object name="Login">
 			<identifier locator="name" value="login" />

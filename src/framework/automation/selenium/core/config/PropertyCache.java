@@ -20,6 +20,7 @@ import framework.automation.selenium.core.utils.XMLUtil;
  * @purpose 
  */
 public class PropertyCache {
+	
 
 	private static XMLUtil prop;
 	private static Map<String,Object> runtime=new HashMap<String,Object>();
