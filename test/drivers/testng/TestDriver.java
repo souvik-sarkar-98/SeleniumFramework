@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import framework.automation.selenium.core.TestEngine;
 
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
 public class TestDriver {
@@ -14,6 +15,7 @@ public class TestDriver {
 
 	@BeforeTest
 	public void setUpTest() throws Exception {
+
 	}
 
 	@Test(priority = 0)
@@ -36,6 +38,11 @@ public class TestDriver {
 	@DataProvider
 	public final Object[] fetchKeywords() throws Exception {
 		return this.engine.getKeywords();
+	}
+	
+	@AfterTest
+	public void generateTestReport() throws Exception {
+		this.engine.generateReport();
 	}
 
 }

@@ -2,22 +2,28 @@
 <Configuration status="WARN">
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<!-- <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} 
-				- %msg%n"/> -->
 			<PatternLayout
-				pattern="[%d{HH:mm:ss.SSS}] %highlight{%-5level %class{36} %L %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=red, DEBUG=green, TRACE=blue}" />
+				pattern="[%d{HH:mm:ss.SSS}] %highlight{[%-5level] %class{36} [%L] %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}" />
 
 		</Console>
-		<File name="File" fileName="abc.log">
+		<RollingFile name="rollingFile" fileName=".logs/test-%d{MM-dd-yyyy}.log"
+			filePattern=".logs/$${date:yyyy-MM}/test-%d{MM-dd-yyyy}-%i.log.gz"
+			ignoreExceptions="false">
 			<PatternLayout
-				pattern="[%d{HH:mm:ss.SSS}] %-5level %class{36} %L %M - %msg%xEx%n" />
-		</File>
+				pattern="[%d{HH:mm:ss.SSS}] %highlight{[%-5level] %class{36} [%L] %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}" />
+			<Policies>
+				<OnStartupTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="5" />
+		</RollingFile>
 		
 	</Appenders>
 	<Loggers>
 		<Root level="trace">
 			<AppenderRef ref="Console" level="info" />
-			<AppenderRef ref="File" level="all" />
+			<AppenderRef ref="rollingFile" level="all" />
 		</Root>
 	</Loggers>
 </Configuration>

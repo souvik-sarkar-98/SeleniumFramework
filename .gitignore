@@ -1,2 +1,6 @@
 /bin/
+/test/
 /test-output/
+/test-resources/
+/.git/
+/.logs/

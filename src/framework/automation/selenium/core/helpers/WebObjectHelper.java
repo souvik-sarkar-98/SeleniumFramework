@@ -7,6 +7,8 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -24,16 +26,18 @@ import framework.automation.selenium.core.utils.XMLUtil;
  * @createdOn 27-Mar-2021
  * @purpose
  */
-public class WebObjectHelper {
-
+public final class WebObjectHelper {
+    private final Logger logger = LogManager.getLogger(this.getClass());
 	private XMLUtil mappingUtil;
 	private XMLUtil objectUtil;
 	private String mappingXml;
 	private String objectXML;
 
 	public WebObjectHelper() throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+		logger.traceEntry();
 		this.mappingXml = PropertyCache.getProperty("ObjectMappingFile").toString();
 		this.mappingUtil = new XMLUtil(mappingXml);
+		logger.traceExit();
 	}
 
 	/**
@@ -49,13 +53,17 @@ public class WebObjectHelper {
 	 */
 	public void loadRepository(String repoName) throws XPathExpressionException, ParserConfigurationException,
 			SAXException, IOException, DOMException, XMLElementNotFoundException {
+		logger.traceEntry("with {}",repoName);
 		NodeList mappingNode = this.mappingUtil.findNodeListByTags("repository", "name", repoName, "path");
 		if (mappingNode == null) {
-			throw new XMLElementNotFoundException(
+			XMLElementNotFoundException e=new XMLElementNotFoundException(
 					"No such object repository named '" + repoName + "' defined in " + this.mappingXml);
+			logger.error(e);
+			 throw e;
 		}
 		this.objectXML = mappingNode.item(0).getTextContent();
 		this.objectUtil = new XMLUtil(this.objectXML);
+		logger.traceExit();
 	}
 
 	/**
@@ -68,67 +76,77 @@ public class WebObjectHelper {
 	 */
 	public By[] getLocators(String elementName)
 			throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException {
-		
+		logger.traceEntry("with {}",elementName);
 		List<By> locators = new ArrayList<By>();
-		
 		NodeList nodes = this.objectUtil.findNodeListByTags("object", "name", elementName, "identifier");
-		
 		if (nodes == null) {
-			throw new XMLElementNotFoundException(
+			XMLElementNotFoundException e= new XMLElementNotFoundException(
 					"No such object element '" + elementName + "' defined in " + this.objectXML);
+			logger.error(e);
+			throw e;
 		}
-		
 		for (int i = 0; i < nodes.getLength(); i++) {
-		
 			Element elem = (Element) nodes.item(i);
-			
 			try {
-			
-				locators.add(this.createByObject(elem.getAttribute("locator"), elem.getAttribute("value")));
-			
+				By obj=this.createByObject(elem.getAttribute("locator"), elem.getAttribute("value"));
+				logger.debug(obj.toString());
+				locators.add(obj);
 			} catch (InvalidLocatorTypeException e) {
-				// log it
-				e.printStackTrace();
+				logger.error(e);
 			}
 			
 		}
-		
 		if (locators.size() == 0) {
-			throw new WebObjectIdentifierNotFoundException("Either no identifier defined for '" + elementName + "' in "
+			WebObjectIdentifierNotFoundException e= new WebObjectIdentifierNotFoundException("Either no identifier defined for '" + elementName + "' in "
 					+ this.objectUtil + "\nOr defined locator is invalid.");
+			logger.error(e);
+			throw e;
 		}
-		for(By abc: locators) {
-			System.out.println(abc);
-		}
+		logger.traceExit("returning {}",locators);
+
 		return locators.toArray(new By[locators.size()]);
 	}
 	
 	
 
 	private By createByObject(String locator, String value) throws InvalidLocatorTypeException {
-
+		By ret=null;
 		switch (locator.toLowerCase()) {
-		
 		case "id":
-			return By.id(value);
+			ret= By.id(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "name":
-			return By.name(value);
+			ret= By.name(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "classname":
-			return By.className(value);
+			ret= By.className(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "cssselector":
-			return By.cssSelector(value);
+			ret= By.cssSelector(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "linktext":
-			return By.linkText(value);
+			ret= By.linkText(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "partiallinktext":
-			return By.partialLinkText(value);
+			ret= By.partialLinkText(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "tagname":
-			return By.tagName(value);
+			ret= By.tagName(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		case "xpath":
-			return By.xpath(value);
+			ret= By.xpath(value);
+			logger.traceExit("returning {}",ret);
+			return ret;
 		default:
 			throw new InvalidLocatorTypeException("No such locator '"+locator+"' available. Try with id/name/className/cssSelector/linktext/partiallinktext/tagname/xpath");
 		}
-
 	}
 
 }

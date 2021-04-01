@@ -3,6 +3,8 @@ package framework.automation.selenium.core.tools;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -25,7 +27,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @purpose :
  */
 public class Browser {
-	
+    private final Logger logger = LogManager.getLogger(this.getClass());
 	private String[] supportedBrowsers= {"Chrome","Firefox","Opera","Edge","IE"};
 	private String browserName=null;
 	private boolean isHeadless=false;
@@ -33,6 +35,7 @@ public class Browser {
 	
 
 	public WebDriver open() throws BrowserNotFoundException {
+		logger.traceEntry();
 		WebDriver driver;
 		if("Chrome".equalsIgnoreCase(this.browserName)) {
 			driver= this.chrome();
@@ -50,6 +53,7 @@ public class Browser {
 		driver.manage().window().maximize();
 		driver.manage().deleteAllCookies();
 		driver.manage().timeouts().implicitlyWait(Integer.parseInt(PropertyCache.getProperty("ImplicitWait").toString()), TimeUnit.SECONDS);
+		logger.traceExit("returning {}",driver);
 		return driver;
 
 	}
@@ -57,6 +61,7 @@ public class Browser {
 
 	
 	private WebDriver chrome() {
+		logger.traceEntry();
 		if(PropertyCache.getProperty("ChromeDriverPath")==null) {
 			WebDriverManager.chromedriver().setup();
 		}else{
@@ -70,51 +75,66 @@ public class Browser {
 		if(this.isIncognito) {
 			options.addArguments("incognito");
 		}
-			
-		return new ChromeDriver(options);
+		ChromeDriver cd=new ChromeDriver(options);
+		logger.traceExit("returning {}",cd);
+		return cd;
 	}
 	
 	private WebDriver fireFox() {
+		logger.traceEntry();
 		WebDriverManager.firefoxdriver().setup();
 		FirefoxOptions options = new FirefoxOptions();
 		if(this.isIncognito) {
 			options.addArguments("-private");
 		}
 		options.setHeadless(this.isHeadless);
-		return new FirefoxDriver(options);
+		FirefoxDriver fd= new FirefoxDriver(options);
+		logger.traceExit("returning {}",fd);
+		return fd;
 	}
 	
 	private WebDriver opera() {
+		logger.traceEntry();
 		WebDriverManager.operadriver().setup();
 		OperaOptions options= new OperaOptions();
 		if(this.isIncognito) {
 			options.addArguments("-private");
 		}
-		return new OperaDriver(options);
+		OperaDriver od=new OperaDriver(options);
+		logger.traceExit("returning {}",od);
+		return od;
 	}
 	
 	private WebDriver edge() {
+		logger.traceEntry();
+
 		WebDriverManager.edgedriver().setup();
 		EdgeOptions options= new EdgeOptions();
 		if(this.isIncognito) {
 			options.setCapability("InPrivate", true);
 		}
-
-		return new EdgeDriver();
+		EdgeDriver ed=new EdgeDriver(options);
+		logger.traceExit("returning {}",ed);
+		return ed;
 	}
 	
 	private WebDriver internetExplorer() {
+		logger.traceEntry();
+
 		if(PropertyCache.getProperty("IEDriverPath")==null) {
 			WebDriverManager.iedriver().arch32().setup();
 		}else{
 			System.setProperty("webdriver.ie.driver", PropertyCache.getProperty("IEDriverPath").toString());
 		}
 		InternetExplorerOptions  options= new InternetExplorerOptions();
+		options.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
 		if(this.isIncognito) {
 			options.setCapability("InPrivate",true);
 		}
 		options.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
-		return new InternetExplorerDriver(options);
+		InternetExplorerDriver ied=new InternetExplorerDriver(options);
+		logger.traceExit("returning {}",ied);
+		return ied;
 	}
 
 
@@ -123,7 +143,9 @@ public class Browser {
 	 * @param browserName the browserName to set
 	 */
 	public void setBrowserName(String browserName) {
+		logger.traceEntry();
 		this.browserName = browserName;
+		logger.traceExit();
 	}
 
 
@@ -133,7 +155,9 @@ public class Browser {
 	 * @remember Headless browsing is only supported by Chrome and firefox
 	 */
 	public void setHeadless(boolean isHeadless) {
+		logger.traceEntry();
 		this.isHeadless = isHeadless;
+		logger.traceExit();
 	}
 
 
@@ -142,7 +166,9 @@ public class Browser {
 	 * @param isIncognito the isIncognito to set
 	 */
 	public void setIncognito(boolean isIncognito) {
+		logger.traceEntry();
 		this.isIncognito = isIncognito;
+		logger.traceExit();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,6 +25,7 @@ import framework.automation.selenium.core.helpers.WebObjectHelper;
  */
 public class ObjectLocator {
 	
+    private final Logger logger = LogManager.getLogger(this.getClass());
 	private WebObjectHelper objHelper;
 	private WebDriver driver;
 
@@ -34,8 +37,10 @@ public class ObjectLocator {
 	 * 
 	 */
 	public ObjectLocator(WebDriver driver) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+		logger.traceEntry("with {}",driver.toString());
 		this.objHelper=new WebObjectHelper();
 		this.driver=driver;
+		logger.traceExit();
 	}
 
 	/**
@@ -47,6 +52,7 @@ public class ObjectLocator {
 	 * @throws XMLElementNotFoundException 
 	 */
 	public WebElement getWebElement(String elementName) throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException {
+		logger.traceEntry("with {}",elementName.toString());
 		WebElement element=null;
 		By[] locators=this.objHelper.getLocators(elementName);
 		for(By locator:locators) {
@@ -55,23 +61,29 @@ public class ObjectLocator {
 				this.highlightElement(element);
 			    break;
 			} catch (NoSuchElementException e) {
-				//log it
-				//e.printStackTrace();
+				logger.error(e);
 			}
 		}
 		if(element==null) {
-			throw new NoSuchElementException("No such element named '"+elementName+"' in page "+driver.getTitle()+" url "+driver.getCurrentUrl());
+			NoSuchElementException e= new NoSuchElementException("No such element named '"+elementName+"' in page "+driver.getTitle()+" url "+driver.getCurrentUrl());
+			 throw e;
 		}
+		logger.traceExit("returning {}",element.toString());
 		return element;
 	}
 	
 	public void setRepository(String repoName) throws XPathExpressionException, DOMException, ParserConfigurationException, SAXException, IOException, XMLElementNotFoundException {
+		logger.traceEntry("with {}",repoName.toString());
 		this.objHelper.loadRepository(repoName);
+		logger.traceExit();
 	}
 	
 	private void highlightElement(WebElement element) {
+		logger.traceEntry("with {}",element.toString());
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("arguments[0].setAttribute('style', 'border: 2px solid blue;');", element);
+		logger.traceExit();
+
 	}
 
 }

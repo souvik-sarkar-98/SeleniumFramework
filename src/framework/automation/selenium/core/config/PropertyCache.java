@@ -21,7 +21,7 @@ import framework.automation.selenium.core.utils.XMLUtil;
  * @createdOn 29-Mar-2021
  * @purpose 
  */
-public class PropertyCache {
+public final class PropertyCache {
 	static {
 		System.setProperty("log4j.configurationFile",PropertyCache.class.getResource("log4j2.xml").toString());
 		//System.setProperty("log4j.configurationFile",PropertyCache.class.getPackageName().replace(".", "/")+"/log4j2.xml");

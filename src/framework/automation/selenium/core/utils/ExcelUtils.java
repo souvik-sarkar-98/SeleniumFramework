@@ -2,9 +2,11 @@ package framework.automation.selenium.core.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,8 +14,14 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -27,6 +35,7 @@ public class ExcelUtils {
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
 	private DataFormatter df;
+	private File workbookFile;
 
 	/**
 	 * @param workbookPath
@@ -38,12 +47,13 @@ public class ExcelUtils {
 	 */
 	public ExcelUtils(String workbookUrl)
 			throws FileNotFoundException, IOException, InvalidFormatException {
-		log.traceEntry();
-		OPCPackage ofile = OPCPackage.open(new File(workbookUrl));
+		log.traceEntry("with {}",workbookUrl);
+		this.workbookFile=new File(workbookUrl);
+		OPCPackage ofile = OPCPackage.open(this.workbookFile);
 		this.workbook = new XSSFWorkbook(ofile);
 		ofile.close();
 		this.df = new DataFormatter();
-
+		
 		log.traceExit();
 	}
 
@@ -125,6 +135,8 @@ public class ExcelUtils {
 	}
 
 	public void release() throws IOException {
+        FileOutputStream os = new FileOutputStream(this.workbookFile);
+		this.workbook.write(os);
 		this.workbook.close();
 	}
 
@@ -134,6 +146,30 @@ public class ExcelUtils {
 	public void setSheet(String sheetName) {
 		this.sheet = this.workbook.getSheet(sheetName);
 	}
+	
+	public void addCommentsByCellContent(String rowHeaderText,Map<String, String> comments) {
+		CreationHelper factory = this.workbook.getCreationHelper();
+		XSSFRow row=this.sheet.getRow(this.getRowHeaderIndex(rowHeaderText, 0));
+		Iterator<Cell> iterator = row.iterator();
+		while (iterator.hasNext()) {
+			Cell nextCell = iterator.next();
+			if (comments.containsKey(nextCell.getStringCellValue())) {
+				Drawing<?> drawing = this.sheet.createDrawingPatriarch();
+				ClientAnchor anchor = factory.createClientAnchor();
+				anchor.setCol1(nextCell.getColumnIndex());
+				anchor.setCol2(nextCell.getColumnIndex()+1);
+				anchor.setRow1(row.getRowNum());
+				anchor.setRow2(row.getRowNum()+3);
+				Comment comment = drawing.createCellComment(anchor);
+				RichTextString str = factory.createRichTextString("Hello, World!");
+				comment.setString(str);
+				comment.setAuthor("Auto Bot");
+				nextCell.setCellComment(comment);
+			}
+		}
+	}
+	
+	
 	
 	
 

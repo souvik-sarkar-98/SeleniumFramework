@@ -14,11 +14,11 @@
 	</property>
 	<property name="DefaultWait">
 		<description></description>
-		<value>2</value>
+		<value>0</value>
 	</property>
 	<property name="ImplicitWait">
 		<description></description>
-		<value>10</value>
+		<value>2</value>
 	</property>
 	<property name="ExplicitWait">
 		<description></description>
@@ -47,5 +47,9 @@
 	<property name="ObjectMappingFile">
 		<description></description>
 		<value>test-resources/objects/mapping.xml</value>
+	</property>
+	<property name="ScreenshotPath">
+		<description></description>
+		<value>test-output/screenshots</value>
 	</property>
 </properties>
