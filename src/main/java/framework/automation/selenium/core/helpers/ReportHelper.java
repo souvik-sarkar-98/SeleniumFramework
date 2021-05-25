@@ -28,7 +28,7 @@ public class ReportHelper {
 		TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
 		File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
 		try {
-			FileUtils.copyFile(SrcFile, new File(PropertyCache.getProperty("ScreenshotPath").toString()+"/"+System.currentTimeMillis()+".png"));
+			FileUtils.copyFile(SrcFile, new File(PropertyCache.getProperty("ScreenshotPath").toString()+"/"+PropertyCache.getProperty("TestName")+"/"+System.currentTimeMillis()+".png"));
 		} catch (IOException e) {
 		}
 	}

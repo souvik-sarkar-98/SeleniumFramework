@@ -137,4 +137,15 @@ public class GenericTestActionLibrary {
 		logger.traceExit();
 	}
 	
+	public void wait(String wait) {
+		logger.traceEntry("with {}",wait);
+		try {
+			Thread.sleep(Integer.parseInt(wait)*1000);
+		} catch (NumberFormatException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		logger.traceExit();
+
+	}
+	
 }

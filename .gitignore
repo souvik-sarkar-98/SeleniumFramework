@@ -4,3 +4,4 @@
 /test-resources/
 /.git/
 /.logs/
+/target/

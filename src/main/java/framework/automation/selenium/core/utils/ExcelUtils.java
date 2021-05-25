@@ -135,8 +135,8 @@ public class ExcelUtils {
 	}
 
 	public void release() throws IOException {
-        FileOutputStream os = new FileOutputStream(this.workbookFile);
-		this.workbook.write(os);
+        //FileOutputStream os = new FileOutputStream(this.workbookFile);
+		//this.workbook.write(os);
 		this.workbook.close();
 	}
 
