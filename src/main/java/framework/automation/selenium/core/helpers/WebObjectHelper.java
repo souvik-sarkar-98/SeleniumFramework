@@ -19,6 +19,7 @@ import framework.automation.selenium.core.config.PropertyCache;
 import framework.automation.selenium.core.exceptions.InvalidLocatorTypeException;
 import framework.automation.selenium.core.exceptions.WebObjectIdentifierNotFoundException;
 import framework.automation.selenium.core.exceptions.XMLElementNotFoundException;
+import framework.automation.selenium.core.utils.MiscUtils;
 import framework.automation.selenium.core.utils.XMLUtil;
 
 /**
@@ -32,10 +33,12 @@ public final class WebObjectHelper {
 	private XMLUtil objectUtil;
 	private String mappingXml;
 	private String objectXML;
+	private Class<?> testClass;
 
-	public WebObjectHelper() throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+	public WebObjectHelper(Class<?> testClass) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		logger.traceEntry();
-		this.mappingXml = PropertyCache.getProperty("ObjectMappingFile").toString();
+		this.testClass=testClass;
+		this.mappingXml = MiscUtils.getFilePath(this.testClass, PropertyCache.getProperty("ObjectMappingFile").toString());
 		this.mappingUtil = new XMLUtil(mappingXml);
 		logger.traceExit();
 	}

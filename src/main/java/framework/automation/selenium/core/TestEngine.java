@@ -29,6 +29,8 @@ public final class TestEngine {
 	private TestDataHelper dataHelper;
 
 	private ReportHelper reporter;
+
+	private Class<?> testClass;
 	
 	
 	/**
@@ -36,16 +38,18 @@ public final class TestEngine {
 	 * @purpose To Create the instance of TestEngine class
 	 * @date 27-Mar-2021
 	 */
-	public TestEngine(String testName) throws Exception  {
-		logger.traceEntry("with parameter {}",testName);
+	public TestEngine(Class<?> testClass) throws Exception  {
+		this.testClass=testClass;
+		logger.traceEntry("with parameter {}",this.testClass.getSimpleName());
 		if(TestEngine.prop==null) {
+			
 			Exception e= new PropertyNotConfiguredException("Property file not set for this test. use 'TestEngine.setPropertyFile(filepath)' before creating TestEngine instance.  ");
 			logger.error("Property not configured. Throwing Exception ",e);
 			throw e;
 		}
-		PropertyCache.setProperty("TestName", testName);
-		this.browser =new Browser();
-		this.dataHelper=new TestDataHelper();
+		PropertyCache.setProperty("TestName", this.testClass.getSimpleName());
+		this.browser =new Browser(this.testClass);
+		this.dataHelper=new TestDataHelper(this.testClass);
 		logger.traceExit();
 	}
 	
@@ -71,7 +75,7 @@ public final class TestEngine {
 		this.browser.setHeadless(PropertyCache.getProperty("IsHeadless")==null?false: (boolean) PropertyCache.getProperty("IsHeadless"));
 		this.browser.setIncognito(PropertyCache.getProperty("IsIncognito")==null?false: (boolean) PropertyCache.getProperty("IsIncognito"));
 		this.driver=this.browser.open();
-		this.interpretor=new KeywordProcessor(this.driver,this.dataHelper);
+		this.interpretor=new KeywordProcessor(this.testClass,this.driver,this.dataHelper);
 		this.reporter=   new ReportHelper(this.driver);
 		logger.traceExit();
 

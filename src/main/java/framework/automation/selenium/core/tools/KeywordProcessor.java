@@ -33,8 +33,10 @@ public final class KeywordProcessor {
 	protected final ActionPerformer reflect;
 	private final TestDataHelper dataHelper;
 	private ObjectLocator locator;
+	private Class<?> testClass;
 
 	/**
+	 * @param testClass 
 	 * @param driver
 	 * @param dataHelper 
 	 * @throws ClassNotFoundException
@@ -45,12 +47,13 @@ public final class KeywordProcessor {
 	 * @throws ParserConfigurationException 
 	 * @throws XPathExpressionException 
 	 */
-	public KeywordProcessor(final WebDriver driver, TestDataHelper dataHelper) throws ClassNotFoundException, FileNotFoundException, InvalidFormatException, IOException, XPathExpressionException, ParserConfigurationException, SAXException {
+	public KeywordProcessor(Class<?> testClass, final WebDriver driver, TestDataHelper dataHelper) throws ClassNotFoundException, FileNotFoundException, InvalidFormatException, IOException, XPathExpressionException, ParserConfigurationException, SAXException {
 		logger.traceEntry(" with {}",driver.toString());
+		this.testClass=testClass;
 		this.driver = driver;
 		this.dataHelper=dataHelper;
 		this.reflect = new ActionPerformer(this.driver);
-		this.locator= new ObjectLocator(this.driver);
+		this.locator= new ObjectLocator(this.testClass,this.driver);
 		logger.traceExit();
 	}
 

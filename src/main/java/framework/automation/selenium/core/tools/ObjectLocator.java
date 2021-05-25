@@ -28,17 +28,20 @@ public class ObjectLocator {
     private final Logger logger = LogManager.getLogger(this.getClass());
 	private WebObjectHelper objHelper;
 	private WebDriver driver;
+	private Class<?> testClass;
 
 	/**
+	 * @param testClass 
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 * @throws XPathExpressionException 
 	 * 
 	 */
-	public ObjectLocator(WebDriver driver) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+	public ObjectLocator(Class<?> testClass, WebDriver driver) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		logger.traceEntry("with {}",driver.toString());
-		this.objHelper=new WebObjectHelper();
+		this.testClass=testClass;
+		this.objHelper=new WebObjectHelper(this.testClass);
 		this.driver=driver;
 		logger.traceExit();
 	}

@@ -34,6 +34,15 @@ public class Browser {
 	private boolean isIncognito=false;
 	
 
+	/**
+	 * @param testClass
+	 */
+	public Browser(Class<?> testClass) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public WebDriver open() throws BrowserNotFoundException {
 		logger.traceEntry();
 		WebDriver driver;
@@ -62,11 +71,14 @@ public class Browser {
 	
 	private WebDriver chrome() {
 		logger.traceEntry();
+		/*
 		if(PropertyCache.getProperty("ChromeDriverPath")==null) {
 			WebDriverManager.chromedriver().setup();
 		}else{
 			System.setProperty("webdriver.chrome.driver", PropertyCache.getProperty("ChromeDriverPath").toString());
 		}
+		*/
+		WebDriverManager.chromedriver().setup();
 		ChromeOptions options = new ChromeOptions();
 		options.setHeadless(this.isHeadless);
 		options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
@@ -120,12 +132,14 @@ public class Browser {
 	
 	private WebDriver internetExplorer() {
 		logger.traceEntry();
-
+		/*
 		if(PropertyCache.getProperty("IEDriverPath")==null) {
 			WebDriverManager.iedriver().arch32().setup();
 		}else{
 			System.setProperty("webdriver.ie.driver", PropertyCache.getProperty("IEDriverPath").toString());
 		}
+		*/
+		WebDriverManager.iedriver().arch32().setup();
 		InternetExplorerOptions  options= new InternetExplorerOptions();
 		options.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
 		if(this.isIncognito) {

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <properties>
+	<property name="DataSource">
+		<description></description>
+		<value>data/DefaultTestSuite.xlsx</value>
+	</property>
+	<property name="ObjectMappingFile">
+		<description></description>
+		<value>objects/mapping.xml</value>
+	</property>
 	<property name="DefaultBrowser">
 		<description></description>
 		<value>IE</value>
-	</property>
-	<property name="ChromeDriverPath">
-		<description></description>
-		<value>.dependencies/drivers/chromedriver.exe</value>
-	</property>
-	<property name="IEDriverPath">
-		<description></description>
-		<value>.dependencies/drivers/IEDriverServer.exe</value>
 	</property>
 	<property name="DefaultWait">
 		<description></description>
@@ -24,10 +24,7 @@
 		<description></description>
 		<value>30</value>
 	</property>
-	<property name="DataSource">
-		<description></description>
-		<value>test-resources/data/DefaultTestSuite.xlsx</value>
-	</property>
+	
 	<property name="KeywordSheetName">
 		<description></description>
 		<value>Keywords</value>
@@ -44,12 +41,16 @@
 		<description></description>
 		<value></value>
 	</property>
-	<property name="ObjectMappingFile">
-		<description></description>
-		<value>test-resources/objects/mapping.xml</value>
-	</property>
 	<property name="ScreenshotPath">
 		<description></description>
 		<value>test-output/screenshots</value>
+	</property>
+	<property name="ChromeDriverPath">
+		<description></description>
+		<value>.dependencies/drivers/chromedriver.exe</value>
+	</property>
+	<property name="IEDriverPath">
+		<description></description>
+		<value>.dependencies/drivers/IEDriverServer.exe</value>
 	</property>
 </properties>
