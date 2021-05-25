@@ -13,7 +13,6 @@ public class TestTest {
   
   @Test(priority=0)
   public void f1() {
-	 int i=5/0;
 	  System.out.println("I am Test1");
   }
   

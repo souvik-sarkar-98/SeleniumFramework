@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<objectRepositories>
+		<repository name="RegistrationPage">
+			<path>test-resources/nabarun/objects/pages/home.xml</path>
+		</repository>
+	</objectRepositories>
+</mapping>

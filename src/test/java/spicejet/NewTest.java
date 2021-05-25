@@ -8,7 +8,8 @@ import framework.automation.selenium.core.TestEngine;
 public class NewTest extends TestDriver {
 	@BeforeTest
 	public void setUpTest() throws Exception {
-		TestEngine.setPropertyFile("test-resources/property.xml");
-		//TestEngine.setProperty("BrowserName", "Chrome");
+		System.out.println(NewTest.class.getResource("property.xml"));
+		TestEngine.setPropertyFile("property.xml");
+		TestEngine.setProperty("BrowserName", "Chrome");
 	}
 }

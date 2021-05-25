@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository name="RegistrationPage" createdOn="28/03/2021"
+	createdBy="souvik sarkar">
+	<objects>
+		<object name="firstname">
+			<identifier locator="cssselector" value="section.ftco-appointment.ftco-section.ftco-no-pt.ftco-no-pb.img div.container div.row div.col-md-5.order-md-last.d-flex.align-items-stretch div.donation-wrap.rounded-bottom form.appointment div.row:nth-child(2) div.col-md-12:nth-child(1) div.form-group div.input-wrap.glow-input:nth-child(2) > input.form-control" />
+			<identifier locator="xpath" value="//label[contains(text(),'First Name')]/following-sibling::div//input" />
+		</object>
+		<object name="lastname">
+			<identifier locator="cssselector" value="section.ftco-appointment.ftco-section.ftco-no-pt.ftco-no-pb.img div.container div.row div.col-md-5.order-md-last.d-flex.align-items-stretch div.donation-wrap.rounded-bottom form.appointment div.row:nth-child(2) div.col-md-12:nth-child(2) div.form-group div.input-wrap.glow-input:nth-child(2) > input.form-control" />
+			<identifier locator="xpath" value="//label[contains(text(),'Last Name')]/following-sibling::div//input" />
+		</object>
+		<object name="email">
+			<identifier locator="xpath" value="//label[contains(text(),'Email Address')]/following-sibling::div//input" />
+		</object>
+		<object name="DialCode">
+			<identifier locator="xpath" value="//label[contains(text(),'Dial Code')]/following-sibling::div//select" />
+		</object>
+		<object name="mobile">
+			<identifier locator="xpath" value="//label[contains(text(),'Mobile Number')]/following-sibling::div//input" />
+		</object>
+		<object name="Proceed">
+			<identifier locator="cssselector" value="section.ftco-appointment.ftco-section.ftco-no-pt.ftco-no-pb.img div.container div.row div.col-md-5.order-md-last.d-flex.align-items-stretch div.donation-wrap.rounded-bottom form.appointment div.row:nth-child(2) div.col-md-12:nth-child(6) div.form-group > button.btn.btn-secondary.py-3.px-4" />
+		</object>
+		<object name="Country">
+			<identifier locator="xpath" value="//label[contains(text(),'Country')]/following-sibling::div//select" />
+		</object>
+		<object name="State">
+			<identifier locator="xpath" value="//label[contains(text(),'State')]/following-sibling::div//select" />
+		</object>
+		<object name="District">
+			<identifier locator="xpath" value="//label[contains(text(),'District')]/following-sibling::div//select" />
+		</object>
+		<object name="City">
+			<identifier locator="xpath" value="//label[contains(text(),'Country')]/following-sibling::div//select" />
+		</object>
+		<object name="Address">
+			<identifier locator="xpath" value="//label[contains(text(),'Address')]/following-sibling::div//textarea" />
+		</object>
+		<object name="Proceed2">
+			<identifier locator="cssSelector" value="section.ftco-appointment.ftco-section.ftco-no-pt.ftco-no-pb.img div.container div.row div.col-md-5.order-md-last.d-flex.align-items-stretch div.donation-wrap.rounded-bottom form.appointment div.row:nth-child(3) div.col-md-12:nth-child(6) div.form-group button.btn.btn-secondary.py-3.px-4 > span:nth-child(1)" />
+		</object>
+		<object name="SourceToKnow">
+			<identifier locator="cssSelector" value="section.ftco-appointment.ftco-section.ftco-no-pt.ftco-no-pb.img div.container div.row div.col-md-5.order-md-last.d-flex.align-items-stretch div.donation-wrap.rounded-bottom form.appointment div.row:nth-child(4) div.col-md-12:nth-child(1) div.form-group div.input-wrap.glow-input:nth-child(2) > select.form-control" />
+		</object>
+		<object name="SourceToKnowOther">
+			<identifier locator="xpath" value="//label[contains(text(),'Please specify')]/following-sibling::div//textarea" />
+		</object>
+		<object name="ReasonForJoining">
+			<identifier locator="xpath" value="//label[contains(text(),'joining')]/following-sibling::div//textarea" />
+		</object>
+		<object name="AcceptanceCheckbox">
+			<identifier locator="xpath" value="//*[@id='check']//input" />
+		</object>
+		<object name="Submit">
+			<identifier locator="xpath" value="//*[contains(text(),'Submitting')]//parent::button" />
+		</object>
+		<object name="ValidateOtp">
+			<identifier locator="id" value="validateotp" />
+		</object>
+	</objects>
+</repository>
