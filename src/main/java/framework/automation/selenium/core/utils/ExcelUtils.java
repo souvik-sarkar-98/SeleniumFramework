@@ -50,7 +50,7 @@ public class ExcelUtils {
 		this.workbookFile=new File(workbookUrl);
 		OPCPackage ofile = OPCPackage.open(this.workbookFile);
 		this.workbook = new XSSFWorkbook(ofile);
-		ofile.close();
+		//ofile.close();
 		this.df = new DataFormatter();
 		
 		log.traceExit();
