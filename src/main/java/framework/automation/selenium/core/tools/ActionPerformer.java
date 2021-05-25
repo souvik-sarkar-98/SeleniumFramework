@@ -37,7 +37,7 @@ public class ActionPerformer {
 		
 		Object[] all = PropertyCache.getProperties("ExternalActionClasses");
 		for (Object className : all) {
-			if(!className.toString().isBlank()) {
+			if(!className.toString().replace("\\s", "").isEmpty()) {
 				classObjects.add(Class.forName(className.toString().trim()));
 				logger.debug("Added External action class "+className);
 			}
