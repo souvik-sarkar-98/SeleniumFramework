@@ -10,7 +10,7 @@
 	</property>
 	<property name="DefaultBrowser">
 		<description></description>
-		<value>IE</value>
+		<value>Chrome</value>
 	</property>
 	<property name="DefaultWait">
 		<description></description>

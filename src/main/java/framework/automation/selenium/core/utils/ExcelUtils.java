@@ -56,7 +56,7 @@ public class ExcelUtils {
 		log.traceExit();
 	}
 
-	public Object[] getEntireRowValues(String rowHeaderText, int columnPickupStartIndex, int headerIndex) {
+	public Object[][] getEntireRowValues(String rowHeaderText, int columnPickupStartIndex, int headerIndex) {
 		log.traceEntry();
 		ArrayList<Object> steps = new ArrayList<Object>();
 		int rowInd=this.getRowHeaderIndex(rowHeaderText, headerIndex);
@@ -70,7 +70,9 @@ public class ExcelUtils {
 			}
 		}
 		log.traceExit();
-		return steps.toArray();
+		Object[][] data=new Object[1][steps.size()];
+		data[0]=steps.toArray();
+		return data;
 	}
 
 	public Object[] getEntireColumnValues(String columnHeaderText, int rowPickupStartIndex,int headerIndex) {

@@ -20,7 +20,7 @@ public class TestDriver {
 		try {
 			TestEngine.setPropertyFile(Paths.get(this.getClass().getResource("property.xml").toURI()).toString());
 		} catch (NullPointerException e) {
-			throw new RuntimeException("No 'property.xml' file found at '"+this.getClass().getPackageName().replace(".", "\\")+"' under test resources folder. To use custom path override setUpTest() method with TestNG @BeforeTest annotation and set property file using 'TestEngine.setPropertyFile(filePath)'.");
+			throw new RuntimeException("No 'property.xml' file found at '"+this.getClass().getPackage().getName().replace(".", "\\")+"' under test resources folder. To use custom path override setUpTest() method with TestNG @BeforeTest annotation and set property file using 'TestEngine.setPropertyFile(filePath)'.");
 		}
 	}
 
@@ -42,7 +42,7 @@ public class TestDriver {
 	}
 
 	@DataProvider
-	public final Object[] fetchKeywords() throws Exception {
+	public final Object[][] fetchKeywords() throws Exception {
 		return this.engine.getKeywords();
 	}
 

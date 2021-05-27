@@ -116,9 +116,9 @@ public final class TestEngine {
 		logger.traceExit();
 	}
 	
-	public final Object[] getKeywords()  throws Exception {
+	public final Object[][] getKeywords()  throws Exception {
 		logger.traceEntry("Fetching keywords for test");
-		Object[] keywords= this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
+		Object[][] keywords= this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 		logger.traceExit(Arrays.asList(keywords));
 		return keywords;
 
