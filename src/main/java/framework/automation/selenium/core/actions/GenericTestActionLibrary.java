@@ -1,11 +1,17 @@
 package framework.automation.selenium.core.actions;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import framework.automation.selenium.core.config.PropertyCache;
 
 /**
  * @author Souvik Sarkar
@@ -31,6 +37,8 @@ public class GenericTestActionLibrary {
 	
 	public void click(WebElement element) {
 		logger.traceEntry("with {}",element.toString());
+		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		 wait.until(ExpectedConditions.elementToBeClickable(element));
 		element.click();
 		logger.traceExit();
 		
@@ -44,6 +52,7 @@ public class GenericTestActionLibrary {
 	}
 	
 	public void set(WebElement element,String data) {
+		System.out.println(data);
 		logger.traceEntry("with {},{}",element.toString(),data);
 		element.sendKeys(data);
 		logger.traceExit();
@@ -62,6 +71,8 @@ public class GenericTestActionLibrary {
 	}
 	public void select(WebElement element,String data) {
 		logger.traceEntry("with {},{}",element.toString(),data);
+		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		 wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
 		if(select.isMultiple()) {
 			logger.debug("Multiple selection applicable.");
@@ -93,6 +104,8 @@ public class GenericTestActionLibrary {
 	
 	public void selectByVisibleText(WebElement element,String data) {
 		logger.traceEntry("with {},{}",element.toString(),data);
+		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		 wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
 		if(select.isMultiple()) {
 			String[] options=data.split(",");
@@ -108,6 +121,8 @@ public class GenericTestActionLibrary {
 	}
 	public void selectByIndex(WebElement element,String data) {
 		logger.traceEntry("with {},{}",element.toString(),data);
+		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		 wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
 		if(select.isMultiple()) {
 			String[] options=data.split(",");
@@ -123,6 +138,8 @@ public class GenericTestActionLibrary {
 	}
 	public void selectByValue(WebElement element,String data) {
 		logger.traceEntry("with {},{}",element.toString(),data);
+		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		 wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
 		if(select.isMultiple()) {
 			String[] options=data.split(",");
@@ -147,5 +164,17 @@ public class GenericTestActionLibrary {
 		logger.traceExit();
 
 	}
+	
+	public void switchWindow() {
+		logger.traceEntry();
+		ArrayList<String> tabs2 = new ArrayList<String> (driver.getWindowHandles());
+	    driver.switchTo().window(tabs2.get(1));
+	    driver.close();
+	    driver.switchTo().window(tabs2.get(0));
+		logger.traceExit();
+
+	}
+	
+	
 	
 }

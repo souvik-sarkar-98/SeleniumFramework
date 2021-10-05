@@ -14,11 +14,11 @@
 	</property>
 	<property name="DefaultWait">
 		<description></description>
-		<value>0</value>
+		<value>1</value>
 	</property>
 	<property name="ImplicitWait">
 		<description></description>
-		<value>2</value>
+		<value>15</value>
 	</property>
 	<property name="ExplicitWait">
 		<description></description>

@@ -3,17 +3,19 @@
 	createdBy="souvik sarkar">
 	<objects>
 		<object name="username">
-			<identifier locator="id" value="email" />
-			<identifier locator="name" value="email" />
-			<identifier locator="xpath" value="//input[@id='email']" />
+			<identifier locator="id" value="username" />
+			<identifier locator="xpath" value="//input[@id='username']" />
 		</object>
 		<object name="password">
-			<identifier locator="id" value="pass" />
-			<identifier locator="name" value="pass" />
-			<identifier locator="xpath" value="//input[@id='pass']" />
+			<identifier locator="id" value="password" />
+			<identifier locator="xpath" value="//input[@id='password']" />
 		</object>
 		<object name="Login">
-			<identifier locator="name" value="login" />
+			<identifier locator="id" value="login" />
 		</object>
+		<object name="SNISTLink">
+			<identifier locator="xpath" value="//a[contains(text(),'OM Adviser SNI-ST')]" />
+		</object>
+		
 	</objects>
 </repository>

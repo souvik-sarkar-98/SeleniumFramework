@@ -1,7 +1,5 @@
 package framework.automation.selenium.core;
 
-import java.util.Arrays;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -69,7 +67,7 @@ public final class TestEngine {
 	 * @purpose 
 	 * @date 27-Mar-2021
 	 */
-	public final void start()  throws Exception {
+	public final void run()  throws Exception {
 		logger.traceEntry("Starting Test");
 		this.browser.setBrowserName(PropertyCache.getProperty("BrowserName")==null?PropertyCache.getProperty("DefaultBrowser").toString():PropertyCache.getProperty("BrowserName").toString());
 		this.browser.setHeadless(PropertyCache.getProperty("IsHeadless")==null?false: (boolean) PropertyCache.getProperty("IsHeadless"));
@@ -77,6 +75,7 @@ public final class TestEngine {
 		this.driver=this.browser.open();
 		this.interpretor=new KeywordProcessor(this.testClass,this.driver,this.dataHelper);
 		this.reporter=   new ReportHelper(this.driver);
+		this.execute();
 		logger.traceExit();
 
 	}
@@ -87,11 +86,16 @@ public final class TestEngine {
 	 * @purpose 
 	 * @date 27-Mar-2021
 	 */
-	public final void execute(String keyword) throws Exception {
+	private final void execute() throws Exception {
 		logger.traceEntry("Executing Keyword");
-		this.interpretor.interpretAndProcess(keyword);
-		Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) );
-		this.reporter.captureScreenshot();
+		Object[] keywords= this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
+		for(Object keyword:keywords){
+			System.out.println(keyword);
+			this.interpretor.interpretAndProcess(keyword.toString());
+			Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) );
+			this.reporter.captureScreenshot();
+		}
+		
 		logger.traceExit();
 
 	}
@@ -110,19 +114,13 @@ public final class TestEngine {
 		logger.traceEntry();
 		this.dataHelper.close();
 		//this.dataHelper.writeProblems();
-		this.reporter.prepareReport();
+		//this.reporter.prepareReport();
 		
 		//prepare report here create new Instance for report
 		logger.traceExit();
 	}
 	
-	public final Object[][] getKeywords()  throws Exception {
-		logger.traceEntry("Fetching keywords for test");
-		Object[][] keywords= this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
-		logger.traceExit(Arrays.asList(keywords));
-		return keywords;
 
-	}
 	
 	public final void setBrowser(String browserName,boolean isHeadless,boolean isIncognito) throws NoSuchTestFoundException {
 		logger.traceEntry("Setting Test browser : browserName={},isHeadless={},isIncognito={}",browserName,isHeadless,isIncognito);

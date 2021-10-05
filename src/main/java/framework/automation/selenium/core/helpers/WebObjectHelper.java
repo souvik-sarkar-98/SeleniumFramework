@@ -65,6 +65,7 @@ public final class WebObjectHelper {
 			 throw e;
 		}
 		this.objectXML = mappingNode.item(0).getTextContent();
+		this.objectXML=MiscUtils.getFilePath(this.testClass,this.objectXML);
 		this.objectUtil = new XMLUtil(this.objectXML);
 		logger.traceExit();
 	}

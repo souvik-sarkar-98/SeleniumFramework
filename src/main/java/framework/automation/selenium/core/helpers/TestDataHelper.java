@@ -36,16 +36,17 @@ public final class TestDataHelper {
 
 	}
 	
-	public Object[][] getKeywords(String testName) throws NoSuchTestFoundException {
+	public Object[] getKeywords(String testName) throws NoSuchTestFoundException {
 		logger.traceEntry(" with parameter {}",testName);
 		String sheetName=PropertyCache.getProperty("KeywordSheetName").toString();
 		this.excel.setSheet(sheetName);
-		Object[][] keywords=this.excel.getEntireRowValues(testName, 1, 0);
+		Object[] keywords= this.excel.getEntireRowValues(testName, 1, 0);
 		if(keywords.length==0) {
 			NoSuchTestFoundException e=new NoSuchTestFoundException("No test named '"+testName+"' found at '"+sheetName+"' sheet in '"+this.datasource);
 			logger.error("Test Not Found",e);
 			throw e;
 		}
+		
 		logger.traceExit(Arrays.asList(keywords));
 		return keywords;
 	}

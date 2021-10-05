@@ -2,7 +2,13 @@
 <mapping>
 	<objectRepositories>
 		<repository name="LoginPage">
-			<path>test-resources/objects/pages/login.xml</path>
+			<path>objects/pages/login.xml</path>
+		</repository>
+		<repository name="SalesDashboardPage">
+			<path>objects/pages/sales-dashboard.xml</path>
+		</repository>
+		<repository name="ServicingDashboardPage">
+			<path>objects/pages/servicing-dashboard.xml</path>
 		</repository>
 	</objectRepositories>
 </mapping>

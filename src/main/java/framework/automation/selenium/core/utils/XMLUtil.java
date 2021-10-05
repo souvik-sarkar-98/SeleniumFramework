@@ -29,6 +29,7 @@ public class XMLUtil {
 
 	public XMLUtil(String filePath)
 			throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+		
 		this.document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filePath));
 		this.document.getDocumentElement().normalize();
 		this.xPath = XPathFactory.newInstance().newXPath();

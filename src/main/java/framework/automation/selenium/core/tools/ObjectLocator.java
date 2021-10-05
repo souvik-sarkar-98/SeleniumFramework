@@ -11,9 +11,12 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
 
+import framework.automation.selenium.core.config.PropertyCache;
 import framework.automation.selenium.core.exceptions.WebObjectIdentifierNotFoundException;
 import framework.automation.selenium.core.exceptions.XMLElementNotFoundException;
 import framework.automation.selenium.core.helpers.WebObjectHelper;
@@ -60,6 +63,8 @@ public class ObjectLocator {
 		By[] locators=this.objHelper.getLocators(elementName);
 		for(By locator:locators) {
 			try {
+				WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+				 wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 				element=driver.findElement(locator);
 				this.highlightElement(element);
 			    break;

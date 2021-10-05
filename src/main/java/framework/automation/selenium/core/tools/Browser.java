@@ -142,6 +142,8 @@ public class Browser {
 		WebDriverManager.iedriver().arch32().setup();
 		InternetExplorerOptions  options= new InternetExplorerOptions();
 		options.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
+		options.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+
 		if(this.isIncognito) {
 			options.setCapability("InPrivate",true);
 		}
