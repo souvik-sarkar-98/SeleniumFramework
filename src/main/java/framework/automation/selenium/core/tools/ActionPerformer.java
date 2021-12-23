@@ -91,6 +91,7 @@ public class ActionPerformer {
 	 * @throws InstantiationException 
 	 */
 	public void perform(String methodName, WebElement object) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
 		logger.traceEntry(" with {},{}",methodName,object.toString());
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
@@ -136,11 +137,23 @@ public class ActionPerformer {
 	 */
 	public void perform(String methodName, WebElement object, String data) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		logger.traceEntry(" with {},{},{}",methodName,object,data);
+		logger.info(methodName);
+
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
 		obj.getMethodObj().invoke(constObj,object,data);
 		logger.traceExit();
+	}
+
+	public void perform(String action) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		logger.traceEntry(" with {}",action);
+		CMObject obj=this.getMethod(action);
+		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
+		Object constObj=construct.newInstance(this.driver);
+		obj.getMethodObj().invoke(constObj);
+		logger.traceExit();
+		
 	}
 	
 	

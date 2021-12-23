@@ -29,6 +29,8 @@ public final class TestEngine {
 	private ReportHelper reporter;
 
 	private Class<?> testClass;
+
+	
 	
 	
 	/**
@@ -90,10 +92,12 @@ public final class TestEngine {
 		logger.traceEntry("Executing Keyword");
 		Object[] keywords= this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 		for(Object keyword:keywords){
-			System.out.println(keyword);
-			this.interpretor.interpretAndProcess(keyword.toString());
-			Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) );
-			this.reporter.captureScreenshot();
+			if(!keyword.equals("")) {
+				logger.info(keyword);
+				this.interpretor.interpretAndProcess(keyword.toString());
+				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) );
+				this.reporter.captureScreenshot();
+			}
 		}
 		
 		logger.traceExit();
@@ -106,13 +110,19 @@ public final class TestEngine {
 	 */
 	public final void stop() {
 		logger.traceEntry("Ending Test");
-		this.driver.close();
+		String closeBrowser=PropertyCache.getProperty("CloseBrowserAfterTest")==null?
+				PropertyCache.getProperty("AutoCloseBrowser").toString():
+					PropertyCache.getProperty("CloseBrowserAfterTest").toString();
+
+		if("TRUE".equalsIgnoreCase(closeBrowser)) {
+			this.driver.close();
+		}
 		logger.traceExit();
 	}
 	
 	public final void generateReport() {
 		logger.traceEntry();
-		this.dataHelper.close();
+		//this.dataHelper.close();
 		//this.dataHelper.writeProblems();
 		//this.reporter.prepareReport();
 		
@@ -128,6 +138,11 @@ public final class TestEngine {
 		PropertyCache.setProperty("IsHeadless", isHeadless);
 		PropertyCache.setProperty("IsIncognito", isIncognito);
 		logger.traceExit();
+	}
+	
+	public final void autoCloseBrowser(boolean isAutoCloseBrowser) throws NoSuchTestFoundException {
+		//this.autoCloseBrowser=isAutoCloseBrowser;
+		PropertyCache.setProperty("CloseBrowserAfterTest",isAutoCloseBrowser);
 	}
 	
 	public static final void setProperty(String key, Object value) throws NoSuchTestFoundException {

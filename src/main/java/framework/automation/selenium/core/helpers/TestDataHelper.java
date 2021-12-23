@@ -14,7 +14,6 @@ import framework.automation.selenium.core.config.PropertyCache;
 import framework.automation.selenium.core.exceptions.InvalidKeywordDataFormatException;
 import framework.automation.selenium.core.exceptions.NoSuchTestFoundException;
 import framework.automation.selenium.core.utils.ExcelUtils;
-import framework.automation.selenium.core.utils.MiscUtils;
 
 /**
  * @author Souvik Sarkar
@@ -30,7 +29,8 @@ public final class TestDataHelper {
 	
 	public TestDataHelper(Class<?> testClass) throws FileNotFoundException, InvalidFormatException, IOException {
 		logger.traceEntry();
-		this.datasource=MiscUtils.getFilePath(testClass, String.valueOf(PropertyCache.getProperty("DataSource")));
+		//this.datasource=MiscUtils.getFilePath(testClass, String.valueOf(PropertyCache.getProperty("DataSource")));
+		this.datasource=String.valueOf(PropertyCache.getProperty("DataSource"));
 		this.excel= new ExcelUtils(this.datasource);
 		logger.traceExit();
 

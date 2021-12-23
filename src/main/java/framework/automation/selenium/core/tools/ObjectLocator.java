@@ -1,6 +1,8 @@
 package framework.automation.selenium.core.tools;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -65,7 +67,11 @@ public class ObjectLocator {
 			try {
 				WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
 				 wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-				element=driver.findElement(locator);
+				//element=
+				List<WebElement> list=driver.findElements(locator);
+				if(!list.isEmpty()) {
+					element=list.get(0);
+				}
 				this.highlightElement(element);
 			    break;
 			} catch (NoSuchElementException e) {

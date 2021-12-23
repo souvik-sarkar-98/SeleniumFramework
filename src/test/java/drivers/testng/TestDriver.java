@@ -3,7 +3,6 @@ package drivers.testng;
 import org.testng.annotations.Test;
 
 import framework.automation.selenium.core.TestEngine;
-
 import java.nio.file.Paths;
 
 import org.testng.annotations.AfterTest;
@@ -23,8 +22,8 @@ public class TestDriver {
 	}
 
 	@Test(priority = 0)
-	public final void startTest() throws Exception {
-		this.engine = new TestEngine(this.getClass());
+	public final void startTest(Class<?> class1) throws Exception {
+		this.engine = new TestEngine(class1);
 		this.engine.run();
 	}
 
@@ -36,5 +35,7 @@ public class TestDriver {
 		this.engine.stop();
 		//this.engine.generateReport();
 	}
+	
+	
 
 }

@@ -165,12 +165,13 @@ public class GenericTestActionLibrary {
 
 	}
 	
-	public void switchWindow() {
+	public void switchWindow()  {
 		logger.traceEntry();
 		ArrayList<String> tabs2 = new ArrayList<String> (driver.getWindowHandles());
-	    driver.switchTo().window(tabs2.get(1));
-	    driver.close();
-	    driver.switchTo().window(tabs2.get(0));
+		driver.close();
+	    driver.switchTo().window(tabs2.get(tabs2.size()-1));
+	   
+	   // driver.switchTo().window(tabs2.get(0)).close();;
 		logger.traceExit();
 
 	}

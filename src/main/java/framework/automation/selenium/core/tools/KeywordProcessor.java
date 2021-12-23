@@ -64,7 +64,7 @@ public final class KeywordProcessor {
 		String[] items = keyword.split("_");
 		String action = null, data = null;
 		WebElement object = null;
-
+		
 		action = items[0];
 		if(action.equalsIgnoreCase("NavigateTo")) {
 			logger.debug("Action is equals to NavigateTo");
@@ -88,7 +88,7 @@ public final class KeywordProcessor {
 				logger.error(e);
 				throw e;
 			} else if (items.length == 1) {
-				this.reflect.perform(action, object);
+				this.reflect.perform(action);
 			} else if (items.length == 2 && paramClasses[0].equals(String.class)) {
 				
 				data = dataHelper.getTestData(items[1]);

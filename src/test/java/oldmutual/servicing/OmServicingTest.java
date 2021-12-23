@@ -2,18 +2,8 @@ package oldmutual.servicing;
 
 import drivers.core.TestDriver;
 
-public class OmServicingTest extends TestDriver{
+public class OmServicingTest{
 	public static void main(String[] args) {
-		start();
+		TestDriver.start(OmServicingTest.class);
 	}
-	
-	
-	@Override
-	public void init() {
-		System.out.println("parent init");
-	}
-
-	
-
-	
 }
