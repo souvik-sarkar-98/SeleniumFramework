@@ -108,6 +108,44 @@ public final class KeywordProcessor {
 
 	}
 	
+	public static String validateKeyword(String keyword,TestDataHelper testDataHelpe) throws FileNotFoundException, InvalidFormatException, IOException{
+		String[] items = keyword.split("_");
+		String action = null;
+		action = items[0];
+		if(action.equalsIgnoreCase("NavigateTo")) {
+			if(items.length!=2) {
+				return "The action '" + action + "' written in keyword '" + keyword
+						+ "' requires 1 parameter but "+(items.length-1)+" given.";
+			}
+		}else {
+			Class<?>[] paramClasses = null;
+			try {
+				paramClasses = new ActionPerformer().inspectParameters(action);
+			} catch (NoSuchMethodException e1) {
+				return e1.getMessage();
+			} catch (SecurityException e1) {
+				return e1.getMessage();
+			} catch (ClassNotFoundException e) {
+				return e.getMessage();
+			}
+			if (paramClasses.length != (items.length - 1)) {
+				return "The action '" + action + "' written in keyword '" + keyword
+						+ "' requires " + paramClasses.length + " argument " + Arrays.asList(paramClasses) + " but only "
+						+ (items.length - 1) + " arguments are given.";
+			} 
+			if (items.length == 2 && paramClasses[0].equals(String.class)) {
+				
+				return testDataHelpe.getTestDataError(items[1]);
+
+			}  else if (items.length == 3) {
+				return testDataHelpe.getTestDataError(items[2]);
+
+			}
+		}
+		return null;
+
+	}
+	
 	
 
 }

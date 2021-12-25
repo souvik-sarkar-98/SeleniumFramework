@@ -74,7 +74,7 @@ public class ObjectLocator {
 				}
 				this.highlightElement(element);
 			    break;
-			} catch (NoSuchElementException e) {
+			} catch (Exception e) {
 				logger.error(e);
 			}
 		}

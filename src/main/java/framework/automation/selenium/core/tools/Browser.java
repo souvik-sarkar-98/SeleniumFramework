@@ -61,6 +61,7 @@ public class Browser {
 		}
 		driver.manage().window().maximize();
 		driver.manage().deleteAllCookies();
+		//System.err.println(PropertyCache.getProperty("ImplicitWait").toString());
 		driver.manage().timeouts().implicitlyWait(Integer.parseInt(PropertyCache.getProperty("ImplicitWait").toString()), TimeUnit.SECONDS);
 		logger.traceExit("returning {}",driver);
 		return driver;

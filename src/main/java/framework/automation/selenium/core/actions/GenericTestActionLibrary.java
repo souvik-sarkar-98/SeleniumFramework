@@ -16,166 +16,183 @@ import framework.automation.selenium.core.config.PropertyCache;
 /**
  * @author Souvik Sarkar
  * @createdOn 27-Mar-2021
- * @purpose 
+ * @purpose
  */
 public class GenericTestActionLibrary {
 	private final WebDriver driver;
-    private final Logger logger = LogManager.getLogger(this.getClass());
+	private final Logger logger = LogManager.getLogger(this.getClass());
 
-	
 	public GenericTestActionLibrary(WebDriver driver) {
-		logger.traceEntry("with driver {}",driver);
-		this.driver=driver;
+		logger.traceEntry("with driver {}", driver);
+		this.driver = driver;
 		logger.traceExit();
 	}
-	
+
 	public void openUrl(String url) {
-		logger.traceEntry("with {}",url);
+		logger.traceEntry("with {}", url);
 		this.driver.get(url);
 		logger.traceExit();
 	}
-	
+
 	public void click(WebElement element) {
-		logger.traceEntry("with {}",element.toString());
-		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		 wait.until(ExpectedConditions.elementToBeClickable(element));
-		element.click();
+		logger.traceEntry("with {}", element.toString());
+		// try {
+		//
+		WebDriverWait wait = new WebDriverWait(driver,
+				Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
+//		}catch(ElementClickInterceptedException e) {
+//			logger.error(e);
+//			//jsClick(element);
+//			Actions actions = new Actions(driver);
+//			actions.moveToElement(element).click().build().perform();
+//		}
 		logger.traceExit();
-		
+
 	}
-	
+
 	public void jsClick(WebElement element) {
-		logger.traceEntry("with {}",element.toString());
-		JavascriptExecutor executor = (JavascriptExecutor)driver;
+		logger.traceEntry("with {}", element.toString());
+		JavascriptExecutor executor = (JavascriptExecutor) driver;
 		executor.executeScript("arguments[0].click();", element);
 		logger.traceExit();
 	}
-	
-	public void set(WebElement element,String data) {
-		System.out.println(data);
-		logger.traceEntry("with {},{}",element.toString(),data);
+
+	public void set(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
 		element.sendKeys(data);
 		logger.traceExit();
 	}
-	
+
 	public void clear(WebElement element) {
-		logger.traceEntry("with {}",element.toString());
+		logger.traceEntry("with {}", element.toString());
 		element.clear();
 		logger.traceExit();
 	}
-	
+
 	public void submit(WebElement element) {
-		logger.traceEntry("with {}",element.toString());
+		logger.traceEntry("with {}", element.toString());
 		element.submit();
 		logger.traceExit();
 	}
-	public void select(WebElement element,String data) {
-		logger.traceEntry("with {},{}",element.toString(),data);
-		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		 wait.until(ExpectedConditions.elementToBeSelected(element));
+
+	public void select(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
+		// WebDriverWait wait = new WebDriverWait(driver,
+		// Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		// wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
-		if(select.isMultiple()) {
+		if (select.isMultiple()) {
 			logger.debug("Multiple selection applicable.");
-			String[] inpdata=data.split(",");
-			for(String inp:inpdata) {
+			String[] inpdata = data.split(",");
+			for (String inp : inpdata) {
 				int index = 0;
-			    for (WebElement option : select.getOptions()) {
-			        if (option.getText().trim().replace("\\s", "").equalsIgnoreCase(inp.trim().replace("\\s", ""))) {
-						logger.debug("Selected value '{}' from dropdown at index '{}'",option.getText(),index);
-			            break;
-			        }
-			        index++;
-			    }
-			    select.selectByIndex(index);
+				for (WebElement option : select.getOptions()) {
+					if (option.getText().trim().replace("\\s", "").equalsIgnoreCase(inp.trim().replace("\\s", ""))) {
+						logger.debug("Selected value '{}' from dropdown at index '{}'", option.getText(), index);
+						break;
+					}
+					index++;
+				}
+				select.selectByIndex(index);
 			}
-		}else {
+		} else {
 			int index = 0;
-		    for (WebElement option : select.getOptions()) {
-		        if (option.getText().trim().replace("\\s", "").equalsIgnoreCase(data.trim().replace("\\s", ""))) {
-					logger.debug("Selected value '{}' from dropdown at index '{}'",option.getText(),index);
-		            break;
-		        }
-		        index++;
-		    }
-		    select.selectByIndex(index);
+			for (WebElement option : select.getOptions()) {
+				if (option.getText().trim().replace("\\s", "").equalsIgnoreCase(data.trim().replace("\\s", ""))) {
+					logger.debug("Selected value '{}' from dropdown at index '{}'", option.getText(), index);
+					break;
+				}
+				index++;
+			}
+			select.selectByIndex(index);
 		}
 		logger.traceExit();
 	}
-	
-	public void selectByVisibleText(WebElement element,String data) {
-		logger.traceEntry("with {},{}",element.toString(),data);
-		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		 wait.until(ExpectedConditions.elementToBeSelected(element));
+
+	public void selectByVisibleText(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
+		// WebDriverWait wait = new WebDriverWait(driver,
+		// Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		// wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
-		if(select.isMultiple()) {
-			String[] options=data.split(",");
-			for(String option:options) {
+		if (select.isMultiple()) {
+			String[] options = data.split(",");
+			for (String option : options) {
 				select.selectByVisibleText(option);
-				logger.debug("Selected value  by visible text '{}' from dropdown",option);
+				logger.debug("Selected value  by visible text '{}' from dropdown", option);
 			}
-		}else {
+		} else {
 			select.selectByVisibleText(data);
-			logger.debug("Selected value by visible text '{}' from dropdown",data);
+			logger.debug("Selected value by visible text '{}' from dropdown", data);
 		}
 		logger.traceExit();
 	}
-	public void selectByIndex(WebElement element,String data) {
-		logger.traceEntry("with {},{}",element.toString(),data);
-		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		 wait.until(ExpectedConditions.elementToBeSelected(element));
+
+	public void selectByIndex(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
+//		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+//		 wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
-		if(select.isMultiple()) {
-			String[] options=data.split(",");
-			for(String option:options) {
+		if (select.isMultiple()) {
+			String[] options = data.split(",");
+			for (String option : options) {
 				select.selectByIndex(Integer.parseInt(option));
-				logger.debug("Selected value from dropdown at index '{}'",option);
+				logger.debug("Selected value from dropdown at index '{}'", option);
 			}
-		}else {
+		} else {
 			select.selectByIndex(Integer.parseInt(data));
-			logger.debug("Selected value from dropdown at index '{}'",data);
+			logger.debug("Selected value from dropdown at index '{}'", data);
 		}
 		logger.traceExit();
 	}
-	public void selectByValue(WebElement element,String data) {
-		logger.traceEntry("with {},{}",element.toString(),data);
-		WebDriverWait wait = new WebDriverWait(driver, Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		 wait.until(ExpectedConditions.elementToBeSelected(element));
+
+	public void selectByValue(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
+		// WebDriverWait wait = new WebDriverWait(driver,
+		// Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+		// wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
-		if(select.isMultiple()) {
-			String[] options=data.split(",");
-			for(String option:options) {
+		if (select.isMultiple()) {
+			String[] options = data.split(",");
+			for (String option : options) {
 				select.selectByValue(option);
-				logger.debug("Selected value from dropdown by Value '{}'",option);
+				logger.debug("Selected value from dropdown by Value '{}'", option);
 			}
-		}else {
+		} else {
 			select.selectByValue(data);
-			logger.debug("Selected value from dropdown by Value '{}'",data);
+			logger.debug("Selected value from dropdown by Value '{}'", data);
 		}
 		logger.traceExit();
 	}
-	
+
+	public void jsSelect(WebElement element, String data) {
+		data = data.replaceAll("\\s+", "").toUpperCase();
+		((JavascriptExecutor) driver).executeScript(
+				"var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text.replace(/\\s+/g, '').toUpperCase() === arguments[1]){ select.options[i].selected = true; } }",
+				element, data);
+	}
+
 	public void wait(String wait) {
-		logger.traceEntry("with {}",wait);
+		logger.traceEntry("with {}", wait);
 		try {
-			Thread.sleep(Integer.parseInt(wait)*1000);
+			Thread.sleep(Integer.parseInt(wait) * 1000);
 		} catch (NumberFormatException | InterruptedException e) {
 			e.printStackTrace();
 		}
 		logger.traceExit();
 
 	}
-	
-	public void switchWindow()  {
+
+	public void switchWindow() {
 		logger.traceEntry();
-		ArrayList<String> tabs2 = new ArrayList<String> (driver.getWindowHandles());
+		ArrayList<String> tabs2 = new ArrayList<String>(driver.getWindowHandles());
 		driver.close();
-	    driver.switchTo().window(tabs2.get(tabs2.size()-1));
-	   
-	   // driver.switchTo().window(tabs2.get(0)).close();;
+		driver.switchTo().window(tabs2.get(tabs2.size() - 1));
+
+		// driver.switchTo().window(tabs2.get(0)).close();;
 		logger.traceExit();
 
 	}
-	
-	
-	
+
 }

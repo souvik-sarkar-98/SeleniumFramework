@@ -45,6 +45,22 @@ public class ActionPerformer {
 		logger.traceExit();
 	}
 	
+	public ActionPerformer() throws ClassNotFoundException {
+		logger.traceEntry();
+		this.driver = null;
+		logger.debug("Added Internal action class "+GenericTestActionLibrary.class.getName());
+		classObjects.add(GenericTestActionLibrary.class);
+		
+		Object[] all = PropertyCache.getProperties("ExternalActionClasses");
+		for (Object className : all) {
+			if(!className.toString().replace("\\s", "").isEmpty()) {
+				classObjects.add(Class.forName(className.toString().trim()));
+				logger.debug("Added External action class "+className);
+			}
+		}
+		logger.traceExit();
+	}
+	
 	private CMObject getMethod(String methodName) throws NoSuchMethodException, SecurityException{
 		logger.traceEntry(" with {}",methodName);
 		Method mObj=null;
@@ -96,6 +112,7 @@ public class ActionPerformer {
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
+		logger.info(methodName+" -"+object);
 		obj.getMethodObj().invoke(constObj,object);
 		logger.traceExit();
 	}
@@ -118,6 +135,7 @@ public class ActionPerformer {
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
+		logger.info(methodName+" "+data);
 		obj.getMethodObj().invoke(constObj,data);
 		logger.traceExit();
 	}
@@ -137,11 +155,10 @@ public class ActionPerformer {
 	 */
 	public void perform(String methodName, WebElement object, String data) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		logger.traceEntry(" with {},{},{}",methodName,object,data);
-		logger.info(methodName);
-
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
+		logger.info(methodName+" " +data+" to element "+object);
 		obj.getMethodObj().invoke(constObj,object,data);
 		logger.traceExit();
 	}
@@ -151,6 +168,7 @@ public class ActionPerformer {
 		CMObject obj=this.getMethod(action);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
+		logger.info(action);
 		obj.getMethodObj().invoke(constObj);
 		logger.traceExit();
 		

@@ -36,6 +36,9 @@ public final class TestDataHelper {
 
 	}
 	
+	
+	
+	
 	public Object[] getKeywords(String testName) throws NoSuchTestFoundException {
 		logger.traceEntry(" with parameter {}",testName);
 		String sheetName=PropertyCache.getProperty("KeywordSheetName").toString();
@@ -110,6 +113,28 @@ public final class TestDataHelper {
 		this.excel.addCommentsByCellContent(PropertyCache.getProperty("TestName").toString(),keywordProblems);
 		logger.traceExit();
 		
+	}
+	
+	public String getTestDataError(String data) {
+		String sheetName=PropertyCache.getProperty("TestDataSheetName").toString();
+		this.excel.setSheet(sheetName);
+		data=data.trim();
+		if((data.startsWith("\"") || data.startsWith("'")) && (data.endsWith("\"") || data.endsWith("'"))) {
+			return null;
+		}
+		Object retVal=null;
+		String[] splits=data.split("-");
+		if(splits.length>1) {
+			logger.debug("Splitted Data lenght >1");
+			retVal=this.excel.getCellValue(splits[0], splits[1]);
+		}
+		
+		if(retVal==null) {
+			return "Either the format of "+data+" is invalid or the pointed cell not exists. See below: "+
+					"\n\nTo pass data directly use \" or ' before and after string e.g. 'Test' or \"Test\" \n"+
+					"To fetch data from datasheet use ColumnHeader-Index e.g. FirstName-5 \n";
+		}
+		return null;
 	}
 	
 	
