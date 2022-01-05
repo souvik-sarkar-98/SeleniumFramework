@@ -189,7 +189,7 @@ public class GenericTestActionLibrary {
 		ArrayList<String> tabs2 = new ArrayList<String>(driver.getWindowHandles());
 		driver.close();
 		driver.switchTo().window(tabs2.get(tabs2.size() - 1));
-
+		driver.manage().window().maximize();
 		// driver.switchTo().window(tabs2.get(0)).close();;
 		logger.traceExit();
 

@@ -1,5 +1,6 @@
 package framework.automation.selenium.core;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
@@ -103,7 +104,9 @@ public final class TestEngine {
 				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
 				}catch(Exception e) {
 					logger.error(e);
-					int response=JOptionPane.showConfirmDialog(null,
+					JFrame jf=new JFrame();
+					jf.setAlwaysOnTop(true);
+					int response=JOptionPane.showConfirmDialog(jf,
 							 "<html><body><p style='width: 500px;'>"+
 							"Execution of '"+keyword+"' keyword has failed due to error '"+e.getMessage()
 							+"' If you want to continue the test, Perform the step manually and click on 'YES' else click on 'NO'"
