@@ -60,6 +60,14 @@ public class GenericTestActionLibrary {
 
 	public void set(WebElement element, String data) {
 		logger.traceEntry("with {},{}", element.toString(), data);
+		//element.clear();
+		element.sendKeys(data);
+		logger.traceExit();
+	}
+	
+	public void setNew(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
+		element.clear();
 		element.sendKeys(data);
 		logger.traceExit();
 	}
@@ -183,13 +191,27 @@ public class GenericTestActionLibrary {
 		logger.traceExit();
 
 	}
+	
+	private void wait(int wait) {
+		logger.traceEntry("with {}", wait);
+		try {
+			Thread.sleep(wait * 1000);
+		} catch ( InterruptedException e) {
+			e.printStackTrace();
+		}
+		logger.traceExit();
+
+	}
 
 	public void switchWindow() {
 		logger.traceEntry();
 		ArrayList<String> tabs2 = new ArrayList<String>(driver.getWindowHandles());
+		wait(2);
 		driver.close();
+		//wait(2);
 		driver.switchTo().window(tabs2.get(tabs2.size() - 1));
-		driver.manage().window().maximize();
+		wait(2);		driver.manage().window().maximize();
+		
 		// driver.switchTo().window(tabs2.get(0)).close();;
 		logger.traceExit();
 

@@ -116,7 +116,8 @@ public final class TestEngine {
 			                JOptionPane.QUESTION_MESSAGE); 
 					//System.err.println(response);
 					if(response != 0) {
-						throw e;
+						//throw e;
+						System.exit(1);
 					}
 				}
 			}
