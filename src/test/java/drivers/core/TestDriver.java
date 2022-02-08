@@ -8,7 +8,7 @@ public final class TestDriver {
 
 	private TestEngine engine;
 
-	public void setUpTest(Class<?> class1) throws Exception {
+	private void setUpTest(Class<?> class1) throws Exception {
 		try {
 			TestEngine.setPropertyFile(Paths.get(class1.getResource("property.xml").toURI()).toString());
 		} catch (NullPointerException e) {
@@ -18,14 +18,13 @@ public final class TestDriver {
 		}
 	}
 
-	public final void startTest(Class<?> class1) throws Exception {
+	private final void startTest(Class<?> class1) throws Exception {
 		this.engine = new TestEngine(class1);
 		this.engine.run();
 	}
 
-	public void endTest() {
+	private void endTest() {
 		this.engine.stop();
-		// this.engine.generateReport();
 	}
 
 	public static void start(Class<?> class1) {
@@ -33,10 +32,12 @@ public final class TestDriver {
 		try {
 			td.setUpTest(class1);
 			td.startTest(class1);
+			//System.err.println("ok66");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			td.endTest();
+			//System.err.println("ok");
 		}
 	}
 

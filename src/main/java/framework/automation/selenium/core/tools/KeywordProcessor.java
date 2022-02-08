@@ -107,7 +107,7 @@ public final class KeywordProcessor {
 		logger.traceExit();
 
 	}
-	
+/*	
 	public static String validateKeyword(String keyword,TestDataHelper testDataHelpe) throws FileNotFoundException, InvalidFormatException, IOException{
 		String[] items = keyword.split("_");
 		String action = null;
@@ -120,7 +120,7 @@ public final class KeywordProcessor {
 		}else {
 			Class<?>[] paramClasses = null;
 			try {
-				paramClasses = new ActionPerformer().inspectParameters(action);
+				paramClasses = new ActionPerformer(null).inspectParameters(action);
 			} catch (NoSuchMethodException e1) {
 				return e1.getMessage();
 			} catch (SecurityException e1) {
@@ -146,6 +146,6 @@ public final class KeywordProcessor {
 
 	}
 	
-	
+*/	
 
 }

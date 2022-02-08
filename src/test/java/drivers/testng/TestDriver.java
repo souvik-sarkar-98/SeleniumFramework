@@ -31,9 +31,8 @@ public class TestDriver {
 	
 
 	@AfterTest
-	public void generateTestReport() throws Exception {
+	public void endTest() throws Exception {
 		this.engine.stop();
-		//this.engine.generateReport();
 	}
 	
 	

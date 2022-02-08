@@ -18,8 +18,9 @@ import framework.automation.selenium.core.config.PropertyCache;
  * @author Souvik Sarkar
  * @createdOn 27-Mar-2021
  * @purpose
+ * 
  */
-public class ActionPerformer {
+public class ActionPerformer{
 	
     private final Logger logger = LogManager.getLogger(this.getClass());
 	protected List<Class<?>> classObjects = new ArrayList<Class<?>>();
@@ -44,10 +45,10 @@ public class ActionPerformer {
 		}
 		logger.traceExit();
 	}
-	
+/*	
 	public ActionPerformer() throws ClassNotFoundException {
 		logger.traceEntry();
-		this.driver = null;
+		//this.driver = null;
 		logger.debug("Added Internal action class "+GenericTestActionLibrary.class.getName());
 		classObjects.add(GenericTestActionLibrary.class);
 		
@@ -60,7 +61,7 @@ public class ActionPerformer {
 		}
 		logger.traceExit();
 	}
-	
+	*/
 	private CMObject getMethod(String methodName) throws NoSuchMethodException, SecurityException{
 		logger.traceEntry(" with {}",methodName);
 		Method mObj=null;

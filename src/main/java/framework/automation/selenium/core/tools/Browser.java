@@ -32,19 +32,12 @@ public class Browser {
 	private String browserName=null;
 	private boolean isHeadless=false;
 	private boolean isIncognito=false;
-
-	/**
-	 * @param testClass
-	 */
-	public Browser(Class<?> testClass) {
-		// TODO Auto-generated constructor stub
-	}
+	protected WebDriver driver;
 
 
-
-	public WebDriver open() throws BrowserNotFoundException {
+	public  WebDriver open() throws BrowserNotFoundException {
 		logger.traceEntry();
-		WebDriver driver;
+		
 		if("Chrome".equalsIgnoreCase(this.browserName)) {
 			driver= this.chrome();
 		}else if("FireFox".equalsIgnoreCase(this.browserName)) {
@@ -66,6 +59,14 @@ public class Browser {
 		return driver;
 
 	}
+	
+	public  void close()  {
+		logger.traceEntry();
+		
+		driver.close();
+		logger.traceExit();
+
+	}
 
 
 	
@@ -83,7 +84,7 @@ public class Browser {
 		options.setHeadless(this.isHeadless);
 		options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
 		options.setExperimentalOption("useAutomationExtension", false);
-
+		options.setCapability("", isHeadless);
 		if(this.isIncognito) {
 			options.addArguments("incognito");
 		}
@@ -112,6 +113,9 @@ public class Browser {
 		if(this.isIncognito) {
 			options.addArguments("-private");
 		}
+		if(this.isHeadless) {
+			System.err.println("[ERROR] Headless mode is not available for Opera browser");
+		}
 		OperaDriver od=new OperaDriver(options);
 		logger.traceExit("returning {}",od);
 		return od;
@@ -126,6 +130,9 @@ public class Browser {
 			options.setCapability("InPrivate", true);
 		}
 		EdgeDriver ed=new EdgeDriver(options);
+		if(this.isHeadless) {
+			System.err.println("[ERROR] Headless mode is not available for Edge browser");
+		}
 		logger.traceExit("returning {}",ed);
 		return ed;
 	}
@@ -147,6 +154,9 @@ public class Browser {
 			options.setCapability("InPrivate",true);
 		}
 		options.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+		if(this.isHeadless) {
+			System.err.println("[ERROR] Headless mode is not available for IE browser");
+		}
 		InternetExplorerDriver ied=new InternetExplorerDriver(options);
 		logger.traceExit("returning {}",ied);
 		return ied;

@@ -1,15 +1,25 @@
 package framework.automation.selenium.core;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.openqa.selenium.WebDriver;
+import org.xml.sax.SAXException;
 
 import framework.automation.selenium.core.config.PropertyCache;
+import framework.automation.selenium.core.exceptions.BrowserNotFoundException;
 import framework.automation.selenium.core.exceptions.NoSuchTestFoundException;
 import framework.automation.selenium.core.exceptions.PropertyNotConfiguredException;
+import framework.automation.selenium.core.exceptions.ResourceConfigurationException;
 import framework.automation.selenium.core.helpers.ReportHelper;
 import framework.automation.selenium.core.helpers.TestDataHelper;
 import framework.automation.selenium.core.tools.Browser;
@@ -41,34 +51,32 @@ public final class TestEngine {
 	public TestEngine(Class<?> testClass) throws Exception {
 		this.testClass = testClass;
 		logger.traceEntry("with parameter {}", this.testClass.getSimpleName());
+		
 		if (TestEngine.prop == null) {
-
-			Exception e = new PropertyNotConfiguredException(
-					"Property file not set for this test. use 'TestEngine.setPropertyFile(filepath)' before creating TestEngine instance.  ");
-			logger.error("Property not configured. Throwing Exception ", e);
-			throw e;
+			try {
+				TestEngine.setPropertyFile(String.valueOf(Paths.get(testClass.getResource("property.xml").toURI())));
+			} catch (NullPointerException e) {
+				throw new PropertyNotConfiguredException("No 'property.xml' file found at default location'"
+						+ testClass.getPackage().getName().replace(".", "\\")+ "'"
+						+ " under test resources folder.\n"
+						+ "Use 'TestEngine.setPropertyFile(filepath)' before creating TestEngine instance.  ");
+			}
 		}
 		PropertyCache.setProperty("TestName", this.testClass.getSimpleName());
-		this.browser = new Browser(this.testClass);
+		this.browser = new Browser();
 		this.dataHelper = new TestDataHelper(this.testClass);
 		logger.traceExit();
 	}
 
 	/**
+	 * @throws NoSuchTestFoundException 
+	 * @throws BrowserNotFoundException 
+	 * @throws ResourceConfigurationException 
 	 * @throws Exception
 	 * @purpose
 	 * @date 27-Mar-2021
 	 */
-	public static final void setPropertyFile(String filePath) throws Exception {
-		TestEngine.prop = new PropertyCache(filePath);
-	}
-
-	/**
-	 * @throws Exception
-	 * @purpose
-	 * @date 27-Mar-2021
-	 */
-	public final void run() throws Exception {
+	public final void run() throws NoSuchTestFoundException, BrowserNotFoundException, ResourceConfigurationException {
 		logger.traceEntry("Starting Test");
 		this.browser.setBrowserName(PropertyCache.getProperty("BrowserName") == null
 				? PropertyCache.getProperty("DefaultBrowser").toString()
@@ -77,75 +85,85 @@ public final class TestEngine {
 				: (boolean) PropertyCache.getProperty("IsHeadless"));
 		this.browser.setIncognito(PropertyCache.getProperty("IsIncognito") == null ? false
 				: (boolean) PropertyCache.getProperty("IsIncognito"));
-		//this.validate();
+		// this.validate();
+
+		Object[] keywords = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 		this.driver = this.browser.open();
-		this.interpretor = new KeywordProcessor(this.testClass, this.driver, this.dataHelper);
+		try {
+			this.interpretor = new KeywordProcessor(this.testClass, this.driver, this.dataHelper);
+		} catch (ClassNotFoundException | InvalidFormatException | XPathExpressionException | IOException
+				| ParserConfigurationException | SAXException e) {
+			throw new ResourceConfigurationException(e);
+		}
 		this.reporter = new ReportHelper(this.driver);
-		this.execute();
+		this.execute(Arrays.copyOf(keywords, keywords.length, String[].class));
+
 		logger.traceExit();
 
 	}
 
 	/**
 	 * @param keyword
+	 * @throws NoSuchTestFoundException
 	 * @throws Exception
 	 * @purpose
 	 * @date 27-Mar-2021
 	 */
-	private final void execute() throws Exception {
+	private final void execute(String[] keywords) {
 		logger.traceEntry("Executing Keyword");
-		Object[] keywords = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
-		for (Object keyword : keywords) {
-			if (!keyword.equals("")) {
-				try {
+		for (String keyword : keywords) {
+			if ("".equals(keyword.trim())) {
+				continue;
+			}
+			try {
 				logger.info(keyword);
-				this.interpretor.interpretAndProcess(keyword.toString());
+				this.interpretor.interpretAndProcess(keyword);
 				this.reporter.captureScreenshot();
 				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
-				}catch(Exception e) {
-					logger.error(e);
-					JFrame jf=new JFrame();
-					jf.setAlwaysOnTop(true);
-					int response=JOptionPane.showConfirmDialog(jf,
-							 "<html><body><p style='width: 500px;'>"+
-							"Execution of '"+keyword+"' keyword has failed due to error '"+e.getMessage()
-							+"' If you want to continue the test, Perform the step manually and click on 'YES' else click on 'NO'"
-							+"</p></body></html>",
-			                "Warning", 
-			                JOptionPane.YES_NO_OPTION,
-			                JOptionPane.QUESTION_MESSAGE); 
-					//System.err.println(response);
-					if(response != 0) {
-						//throw e;
-						System.exit(1);
-					}
+			} catch (Exception e) {
+				logger.error(e);
+				JFrame jf = new JFrame();
+				jf.setAlwaysOnTop(true);
+				String message = null;
+				message = "Message : " + e.getMessage();
+				if (e.getCause() != null) {
+//					 if(e.getCause().getMessage().length()>200)
+//					 message="Cause : "+e.getCause().getMessage().substring(0, 200);
+//					 else
+					message += "Cause : " + e.getCause().getMessage();
+				}
+
+				int response = JOptionPane.showConfirmDialog(jf, "<html><body><p style='width: 350px;'>"
+						+ "Execution of '" + keyword + "' keyword has failed due to error " + "'"
+						+ message.replaceAll("[\\t\\n\\r]+", "<br>") + "'"
+						+ "<br> If you want to continue the test, Perform the step manually and click on 'YES' else click on 'NO'"
+						+ " </p></body></html>", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+				jf.dispose();
+				if (response == 1) {
+					break;
 				}
 			}
 		}
-
 		logger.traceExit();
 
 	}
 
 	/*
-	private final void validate() throws Exception {
-		logger.traceEntry("Validating Keyword");
-		Map<String, String> list = new HashMap<String, String>();
-		Object[] keywords = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
-		for (Object keyword : keywords) {
-			if (!keyword.equals("")) {
-				String error = KeywordProcessor.validateKeyword(keyword.toString(), this.dataHelper);
-				if (error != null) {
-					list.put(keyword.toString(), error);
-					logger.error(keywords.toString() + " " + error);
-				}
-				// System.err.println(keyword +"--"+error );
-			}
-		}
-		
-		logger.traceExit();
-
-	}*/
+	 * private final void validate() throws Exception {
+	 * logger.traceEntry("Validating Keyword"); Map<String, String> list = new
+	 * HashMap<String, String>(); Object[] keywords =
+	 * this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString())
+	 * ; for (Object keyword : keywords) { if (!keyword.equals("")) { String error =
+	 * KeywordProcessor.validateKeyword(keyword.toString(), this.dataHelper); if
+	 * (error != null) { list.put(keyword.toString(), error);
+	 * logger.error(keywords.toString() + " " + error); } //
+	 * System.err.println(keyword +"--"+error ); } }
+	 * 
+	 * logger.traceExit();
+	 * 
+	 * }
+	 */
 
 	/**
 	 * @purpose
@@ -156,10 +174,10 @@ public final class TestEngine {
 		String closeBrowser = PropertyCache.getProperty("CloseBrowserAfterTest") == null
 				? PropertyCache.getProperty("AutoCloseBrowser").toString()
 				: PropertyCache.getProperty("CloseBrowserAfterTest").toString();
-
 		if ("TRUE".equalsIgnoreCase(closeBrowser)) {
-			this.driver.close();
+			this.browser.close();
 		}
+		this.generateReport();
 		logger.traceExit();
 	}
 
@@ -173,8 +191,21 @@ public final class TestEngine {
 		logger.traceExit();
 	}
 
-	public final void setBrowser(String browserName, boolean isHeadless, boolean isIncognito)
-			throws NoSuchTestFoundException {
+	/**
+	 * @throws ResourceConfigurationException 
+	 * @throws Exception
+	 * @purpose
+	 * @date 27-Mar-2021
+	 */
+	public static final void setPropertyFile(String filePath) throws ResourceConfigurationException {
+		try {
+			TestEngine.prop = new PropertyCache(filePath);
+		} catch (XPathExpressionException | ParserConfigurationException | SAXException | IOException e) {
+			throw new ResourceConfigurationException(e);
+		}
+	}
+
+	public final void setBrowser(String browserName, boolean isHeadless, boolean isIncognito) {
 		logger.traceEntry("Setting Test browser : browserName={},isHeadless={},isIncognito={}", browserName, isHeadless,
 				isIncognito);
 		PropertyCache.setProperty("BrowserName", browserName);
