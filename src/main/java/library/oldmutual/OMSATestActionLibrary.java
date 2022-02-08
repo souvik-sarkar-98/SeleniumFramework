@@ -1,4 +1,4 @@
-package library.omsa;
+package library.oldmutual;
 
 import java.awt.AWTException;
 import java.awt.Robot;

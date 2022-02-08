@@ -216,5 +216,20 @@ public class GenericTestActionLibrary {
 		logger.traceExit();
 
 	}
+	
+	public void storeInnertext() {
+		logger.traceEntry();
+		//
+		logger.traceExit();
+
+	}
+	
+	public String getInnertext(WebElement element) {
+		logger.traceEntry();
+		//
+		logger.traceExit();
+		return null;
+
+	}
 
 }

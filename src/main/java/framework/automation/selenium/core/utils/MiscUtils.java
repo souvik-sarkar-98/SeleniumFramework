@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.StringTokenizer;
+
+import org.apache.logging.log4j.Level;
 
 /**
  * @author Souvik Sarkar
@@ -36,5 +39,45 @@ public class MiscUtils {
 			return null;
 		}
 
+	}
+	
+	public static String addLinebreaks(String input, int maxLineLength) {
+	    StringTokenizer tok = new StringTokenizer(input, " ");
+	    StringBuilder output = new StringBuilder(input.length());
+	    int lineLen = 0;
+	    while (tok.hasMoreTokens()) {
+	        String word = tok.nextToken();
+	        word+=" ";
+	        if (lineLen + word.length() > maxLineLength) {
+	            output.append("\n");
+	            lineLen = 0;
+	        }
+	        output.append(word);
+	        lineLen += word.length();
+	    }
+	    return output.toString();
+	}
+	
+	public static Level getLogLevel(String level) {
+		switch(level.toUpperCase()){
+		case "ALL":
+			return Level.ALL;
+		case "TRACE":
+			return Level.TRACE;
+		case "DEBUG":
+			return Level.DEBUG;
+		case "INFO":
+			return Level.INFO;
+		case "WARN":
+			return Level.WARN;
+		case "ERROR":
+			return Level.ERROR;
+		case "FATAL":
+			return Level.FATAL;
+		case "OFF":
+			return Level.OFF;
+		default:
+			return Level.INFO;	
+		}
 	}
 }

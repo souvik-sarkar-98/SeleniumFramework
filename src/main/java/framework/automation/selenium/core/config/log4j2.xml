@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+	 <Properties>
+        <Property name="basePath">.logs</Property>
+     
+    </Properties>
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="[%d{HH:mm:ss.SSS}] %highlight{[%-5level] %class{36} [%L] %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}" />
+				pattern="[%d{dd MMM yyyy HH:mm:ss.SSS}] %highlight{[%-5level] %class{36} [%L] %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}" />
 
 		</Console>
-		<RollingFile name="rollingFile" fileName=".logs/test-%d{MM-dd-yyyy}.log"
-			filePattern=".logs/$${date:yyyy-MM}/test-%d{MM-dd-yyyy}-%i.log.gz"
+		<!-- <RollingFile name="rollingFile" fileName=".logs/test-%d{MM-dd-yyyy}.log"
+			filePattern=".logs/$${date:yyyy-MM}/test-%d{MM-dd-yyyy}-%i.log"
 			ignoreExceptions="false">
 			<PatternLayout
 				pattern="[%d{HH:mm:ss.SSS}] %highlight{[%-5level] %class{36} [%L] %M - %msg%xEx%n}{FATAL=red, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}" />
@@ -17,13 +21,22 @@
 				<TimeBasedTriggeringPolicy />
 			</Policies>
 			<DefaultRolloverStrategy max="5" />
-		</RollingFile>
-		
+		</RollingFile> 
+		 -->
+		 <RollingFile name="rollingFile" fileName="${basePath}/test-execution-info.html"
+               filePattern="${basePath}/$${date:yyyy-MM}/test-execution-info-%d{yyyy-MM-dd}.html">
+           
+            <HTMLLayout datePattern="dd MMM yyyy HH:mm:ss.SSS" charset="UTF-8" title="Execution Logs" locationInfo="true" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingFile>
 	</Appenders>
 	<Loggers>
 		<Root level="trace">
-			<AppenderRef ref="Console" level="trace" />
-			<AppenderRef ref="rollingFile" level="all" />
+			<AppenderRef ref="Console" level="info" />
+			<AppenderRef ref="rollingFile" level="trace" />
 		</Root>
 	</Loggers>
 </Configuration>
