@@ -1,4 +1,4 @@
-package library.oldmutual;
+package com.oldmutual.testautomation.library;
 
 import java.awt.AWTException;
 import java.awt.Robot;

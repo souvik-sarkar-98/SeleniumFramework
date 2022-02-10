@@ -1,6 +1,6 @@
 package oldmutual.servicing;
 
-import drivers.core.TestDriver;
+import com.oldmutual.testautomation.driver.TestDriver;
 
 public class OM_SERVICING_SR_MIMO_TRANSFER_OUT{
 	public static void main(String[] args) {

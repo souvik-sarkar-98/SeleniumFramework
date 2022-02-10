@@ -1,4 +1,4 @@
-package drivers.testng;
+package com.oldmutual.testautomation.driver;
 
 import org.testng.annotations.Test;
 
@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
-public class TestDriver {
+public class TestNGDriver {
 
 	private TestEngine engine;
 

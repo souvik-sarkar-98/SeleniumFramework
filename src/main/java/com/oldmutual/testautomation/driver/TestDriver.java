@@ -1,8 +1,9 @@
-package drivers.core;
+package com.oldmutual.testautomation.driver;
 
 import java.nio.file.Paths;
 
 import framework.automation.selenium.core.TestEngine;
+import framework.automation.selenium.core.helpers.TestActionListener;
 
 public final class TestDriver {
 
@@ -22,7 +23,27 @@ public final class TestDriver {
 
 	private final void startTest(Class<?> class1) throws Exception {
 		this.engine = new TestEngine(class1);
-		this.engine.run();
+		TestActionListener tl=new TestActionListener() {
+			
+			@Override
+			public void uploadEvidence(String fileName) {
+				System.err.println("uploading file ");
+				
+			}
+			
+			@Override
+			public void passTestCase(String testCaseName, String message) {
+				System.err.println(testCaseName+" is "+message);
+				
+			}
+			
+			@Override
+			public void failTestCase(String testCaseName, String message, Exception e) {
+				System.err.println(testCaseName+" is "+message+" due to "+ e);
+				
+			}
+		};
+		this.engine.run(tl);
 	}
 
 	private void endTest() {
