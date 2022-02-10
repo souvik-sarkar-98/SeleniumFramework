@@ -3,6 +3,8 @@ package drivers.testng;
 import org.testng.annotations.Test;
 
 import framework.automation.selenium.core.TestEngine;
+import framework.automation.selenium.core.helpers.TestActionListener;
+
 import java.nio.file.Paths;
 
 import org.testng.annotations.AfterTest;
@@ -24,7 +26,26 @@ public class TestDriver {
 	@Test(priority = 0)
 	public final void startTest(Class<?> class1) throws Exception {
 		this.engine = new TestEngine(class1);
-		this.engine.run();
+		this.engine.run(new TestActionListener() {
+			
+			@Override
+			public void uploadEvidence(String fileName) {
+				System.err.println("uploading file ");
+				
+			}
+			
+			@Override
+			public void passTestCase(String testCaseName, String message) {
+				System.err.println(testCaseName+" is "+message);
+				
+			}
+			
+			@Override
+			public void failTestCase(String testCaseName, String message, Exception e) {
+				System.err.println(testCaseName+" is "+message+" due to "+ e);
+				
+			}
+		});
 	}
 
 

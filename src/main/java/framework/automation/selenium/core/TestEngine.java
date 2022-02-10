@@ -22,6 +22,7 @@ import framework.automation.selenium.core.exceptions.NoSuchTestFoundException;
 import framework.automation.selenium.core.exceptions.PropertyNotConfiguredException;
 import framework.automation.selenium.core.exceptions.ResourceConfigurationException;
 import framework.automation.selenium.core.helpers.ReportHelper;
+import framework.automation.selenium.core.helpers.TestActionListener;
 import framework.automation.selenium.core.helpers.TestDataHelper;
 import framework.automation.selenium.core.tools.Browser;
 import framework.automation.selenium.core.tools.KeywordProcessor;
@@ -88,13 +89,17 @@ public final class TestEngine {
 		}
 		logger.traceExit();
 	}
+	
+	public final void run() throws Exception{
+		run(null);
+	}
 
 	/**
 	 * @throws Exception
 	 * @purpose
 	 * @date 27-Mar-2021
 	 */
-	public final void run() throws Exception {
+	public final void run(TestActionListener tl) throws Exception {
 		logger.traceEntry("Starting Test");
 		this.browser.setBrowserName(PropertyCache.getProperty("BrowserName") == null
 				? PropertyCache.getProperty("DefaultBrowser").toString()
@@ -111,6 +116,9 @@ public final class TestEngine {
 			this.driver = this.browser.open();
 			this.interpretor = new KeywordProcessor(this.testClass, this.driver, this.dataHelper);
 			this.reporter = new ReportHelper(this.driver);
+			if(tl != null) {
+				this.reporter.addTestActionListener(tl);
+			}
 			this.execute(Arrays.copyOf(keywords, keywords.length, String[].class));
 		} catch (ClassNotFoundException | InvalidFormatException | XPathExpressionException | IOException
 				| ParserConfigurationException | SAXException e) {
@@ -147,9 +155,11 @@ public final class TestEngine {
 				logger.info(keyword);
 				this.interpretor.interpretAndProcess(keyword);
 				this.reporter.captureScreenshot();
+				this.reporter.testCasePassed(keyword, "Working as expected");
 				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
 			} catch (Exception e) {
 				logger.error(e);
+				this.reporter.testCaseFailed(keyword, "Failed to execute", e);
 				if ("TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("IsHeadless")))) {
 					throw e;
 				}
@@ -208,19 +218,11 @@ public final class TestEngine {
 		if ("TRUE".equalsIgnoreCase(closeBrowser)) {
 			this.browser.close();
 		}
-		this.generateReport();
+		
+		this.reporter.saveScreenshot(String.valueOf(PropertyCache.getProperty("EvidenceFormat")));
 		logger.traceExit();
 	}
 
-	public final void generateReport() {
-		logger.traceEntry();
-		// this.dataHelper.close();
-		// this.dataHelper.writeProblems();
-		// this.reporter.prepareReport();
-
-		// prepare report here create new Instance for report
-		logger.traceExit();
-	}
 
 	/**
 	 * @throws ResourceConfigurationException
@@ -253,5 +255,8 @@ public final class TestEngine {
 	public static final void setProperty(String key, Object value) throws NoSuchTestFoundException {
 		PropertyCache.setProperty(key, value);
 	}
+	
+	
+	
 
 }
