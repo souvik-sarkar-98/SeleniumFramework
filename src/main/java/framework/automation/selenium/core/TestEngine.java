@@ -1,5 +1,6 @@
 package framework.automation.selenium.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -22,7 +23,6 @@ import framework.automation.selenium.core.exceptions.NoSuchTestFoundException;
 import framework.automation.selenium.core.exceptions.PropertyNotConfiguredException;
 import framework.automation.selenium.core.exceptions.ResourceConfigurationException;
 import framework.automation.selenium.core.helpers.ReportHelper;
-import framework.automation.selenium.core.helpers.TestActionListener;
 import framework.automation.selenium.core.helpers.TestDataHelper;
 import framework.automation.selenium.core.tools.Browser;
 import framework.automation.selenium.core.tools.KeywordProcessor;
@@ -170,7 +170,7 @@ public final class TestEngine {
 								+ "' keyword has failed due to an error.</p>")
 						.append("<p style='font-weight: bold;'>⚫ If you want to continue the test, Perform the step manually and click on 'YES'."
 								+ "<br>⚫ Click on 'NO' to end the test.</p>")
-						.append("<br>").append("➼ Error Message : <p style='color:blue;'>" + e.getMessage() + "</p>")
+						.append("<br>").append("➼ Error Message : <p style='color:blue;'>" + (e.getMessage() == null ?"Not available":e.getMessage()) + "</p>")
 						.append("<br>")
 						.append("➼ Error Cause : <div style='color:red;'>" + (e.getCause() == null ? " Not available"
 								: MiscUtils.addLinebreaks(e.getCause().getMessage(), 300)) + "</div>")
@@ -223,7 +223,9 @@ public final class TestEngine {
 		logger.traceExit();
 	}
 
-
+	public static final void setPropertyFile(File file) throws ResourceConfigurationException{
+		setPropertyFile(file.getAbsolutePath());
+	}
 	/**
 	 * @throws ResourceConfigurationException
 	 * @throws Exception

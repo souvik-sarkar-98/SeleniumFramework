@@ -33,12 +33,14 @@ public final class WebObjectHelper {
 	private XMLUtil objectUtil;
 	private String mappingXml;
 	private String objectXML;
-	private Class<?> testClass;
+	//private Class<?> testClass;
 
 	public WebObjectHelper(Class<?> testClass) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		logger.traceEntry();
-		this.testClass=testClass;
-		this.mappingXml = MiscUtils.getFilePath(this.testClass, PropertyCache.getProperty("ObjectMappingFile").toString());
+		//this.testClass=testClass;
+		//commenting this
+		//this.mappingXml = MiscUtils.getFilePath(this.testClass, PropertyCache.getProperty("ObjectMappingFile").toString());
+		this.mappingXml = MiscUtils.getFilePath(String.valueOf(PropertyCache.getProperty("ObjectMappingFile")));
 		this.mappingUtil = new XMLUtil(mappingXml);
 		logger.traceExit();
 	}
@@ -65,9 +67,16 @@ public final class WebObjectHelper {
 			 throw e;
 		}
 		this.objectXML = mappingNode.item(0).getTextContent();
-		this.objectXML=MiscUtils.getFilePath(this.testClass,this.objectXML);
+		//removed on 11/02/2022 for removing class path dependency
+		//this.objectXML=MiscUtils.getFilePath(this.testClass,this.objectXML);
+		this.objectXML=MiscUtils.getFilePath(this.objectXML);
 		this.objectUtil = new XMLUtil(this.objectXML);
 		logger.traceExit();
+	}
+	
+	public By[] getLocators(String elementName)
+			throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException{
+		return getLocators(elementName,false);
 	}
 
 	/**
@@ -78,12 +87,12 @@ public final class WebObjectHelper {
 	 * @throws XMLElementNotFoundException
 	 * @throws WebObjectIdentifierNotFoundException
 	 */
-	public By[] getLocators(String elementName)
+	public By[] getLocators(String elementName,boolean ignoreError)
 			throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException {
 		logger.traceEntry("with {}",elementName);
 		List<By> locators = new ArrayList<By>();
 		NodeList nodes = this.objectUtil.findNodeListByTags("object", "name", elementName, "identifier");
-		if (nodes == null) {
+		if (nodes == null && ignoreError == false) {
 			XMLElementNotFoundException e= new XMLElementNotFoundException(
 					"No such object element '" + elementName + "' defined in " + this.objectXML);
 			logger.error(e);
@@ -100,7 +109,7 @@ public final class WebObjectHelper {
 			}
 			
 		}
-		if (locators.size() == 0) {
+		if (locators.size() == 0 && ignoreError == false) {
 			WebObjectIdentifierNotFoundException e= new WebObjectIdentifierNotFoundException("Either no identifier defined for '" + elementName + "' in "
 					+ this.objectUtil + "\nOr defined locator is invalid.");
 			logger.error(e);
