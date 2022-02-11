@@ -73,6 +73,11 @@ public final class WebObjectHelper {
 		this.objectUtil = new XMLUtil(this.objectXML);
 		logger.traceExit();
 	}
+	
+	public By[] getLocators(String elementName)
+			throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException{
+		return getLocators(elementName,false);
+	}
 
 	/**
 	 * @purpose
@@ -82,12 +87,12 @@ public final class WebObjectHelper {
 	 * @throws XMLElementNotFoundException
 	 * @throws WebObjectIdentifierNotFoundException
 	 */
-	public By[] getLocators(String elementName)
+	public By[] getLocators(String elementName,boolean ignoreError)
 			throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException {
 		logger.traceEntry("with {}",elementName);
 		List<By> locators = new ArrayList<By>();
 		NodeList nodes = this.objectUtil.findNodeListByTags("object", "name", elementName, "identifier");
-		if (nodes == null) {
+		if (nodes == null && ignoreError == false) {
 			XMLElementNotFoundException e= new XMLElementNotFoundException(
 					"No such object element '" + elementName + "' defined in " + this.objectXML);
 			logger.error(e);
@@ -104,7 +109,7 @@ public final class WebObjectHelper {
 			}
 			
 		}
-		if (locators.size() == 0) {
+		if (locators.size() == 0 && ignoreError == false) {
 			WebObjectIdentifierNotFoundException e= new WebObjectIdentifierNotFoundException("Either no identifier defined for '" + elementName + "' in "
 					+ this.objectUtil + "\nOr defined locator is invalid.");
 			logger.error(e);

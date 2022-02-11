@@ -23,7 +23,6 @@ import framework.automation.selenium.core.exceptions.NoSuchTestFoundException;
 import framework.automation.selenium.core.exceptions.PropertyNotConfiguredException;
 import framework.automation.selenium.core.exceptions.ResourceConfigurationException;
 import framework.automation.selenium.core.helpers.ReportHelper;
-import framework.automation.selenium.core.helpers.TestActionListener;
 import framework.automation.selenium.core.helpers.TestDataHelper;
 import framework.automation.selenium.core.tools.Browser;
 import framework.automation.selenium.core.tools.KeywordProcessor;

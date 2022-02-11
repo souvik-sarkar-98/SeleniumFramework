@@ -10,6 +10,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
+import framework.automation.selenium.core.TestActionListener;
 import framework.automation.selenium.core.config.PropertyCache;
 
 /**
