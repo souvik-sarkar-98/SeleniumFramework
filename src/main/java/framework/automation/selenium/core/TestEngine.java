@@ -154,7 +154,7 @@ public final class TestEngine {
 
 				logger.info(keyword);
 				this.interpretor.interpretAndProcess(keyword);
-				this.reporter.captureScreenshot();
+				this.reporter.captureScreenshot(keyword);
 				this.reporter.testCasePassed(keyword, "Working as expected");
 				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
 			} catch (Exception e) {
@@ -219,7 +219,11 @@ public final class TestEngine {
 			this.browser.close();
 		}
 		
-		this.reporter.saveScreenshot(String.valueOf(PropertyCache.getProperty("EvidenceFormat")));
+		try {
+			this.reporter.saveScreenshot();
+		} catch (InvalidFormatException | IOException e) {
+			logger.error("Failed fo save screenshot", e);
+		}
 		logger.traceExit();
 	}
 
