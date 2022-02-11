@@ -171,7 +171,7 @@ public final class TestEngine {
 								+ "' keyword has failed due to an error.</p>")
 						.append("<p style='font-weight: bold;'>⚫ If you want to continue the test, Perform the step manually and click on 'YES'."
 								+ "<br>⚫ Click on 'NO' to end the test.</p>")
-						.append("<br>").append("➼ Error Message : <p style='color:blue;'>" + e.getMessage() + "</p>")
+						.append("<br>").append("➼ Error Message : <p style='color:blue;'>" + (e.getMessage() == null ?"Not available":e.getMessage()) + "</p>")
 						.append("<br>")
 						.append("➼ Error Cause : <div style='color:red;'>" + (e.getCause() == null ? " Not available"
 								: MiscUtils.addLinebreaks(e.getCause().getMessage(), 300)) + "</div>")
