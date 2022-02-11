@@ -1,5 +1,6 @@
 package framework.automation.selenium.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -223,7 +224,9 @@ public final class TestEngine {
 		logger.traceExit();
 	}
 
-
+	public static final void setPropertyFile(File file) throws ResourceConfigurationException{
+		setPropertyFile(file.getAbsolutePath());
+	}
 	/**
 	 * @throws ResourceConfigurationException
 	 * @throws Exception
