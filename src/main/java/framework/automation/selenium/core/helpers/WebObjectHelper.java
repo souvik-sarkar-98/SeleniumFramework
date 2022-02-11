@@ -33,12 +33,14 @@ public final class WebObjectHelper {
 	private XMLUtil objectUtil;
 	private String mappingXml;
 	private String objectXML;
-	private Class<?> testClass;
+	//private Class<?> testClass;
 
 	public WebObjectHelper(Class<?> testClass) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		logger.traceEntry();
-		this.testClass=testClass;
-		this.mappingXml = MiscUtils.getFilePath(this.testClass, PropertyCache.getProperty("ObjectMappingFile").toString());
+		//this.testClass=testClass;
+		//commenting this
+		//this.mappingXml = MiscUtils.getFilePath(this.testClass, PropertyCache.getProperty("ObjectMappingFile").toString());
+		this.mappingXml = MiscUtils.getFilePath(String.valueOf(PropertyCache.getProperty("ObjectMappingFile")));
 		this.mappingUtil = new XMLUtil(mappingXml);
 		logger.traceExit();
 	}
@@ -65,7 +67,9 @@ public final class WebObjectHelper {
 			 throw e;
 		}
 		this.objectXML = mappingNode.item(0).getTextContent();
-		this.objectXML=MiscUtils.getFilePath(this.testClass,this.objectXML);
+		//removed on 11/02/2022 for removing class path dependency
+		//this.objectXML=MiscUtils.getFilePath(this.testClass,this.objectXML);
+		this.objectXML=MiscUtils.getFilePath(this.objectXML);
 		this.objectUtil = new XMLUtil(this.objectXML);
 		logger.traceExit();
 	}

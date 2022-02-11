@@ -23,11 +23,23 @@ public class MiscUtils {
 			if(res == null) {
 				throw new FileNotFoundException("No such file "+fileName+" found under class path "+resourceClass);
 			}
+			//hello
 			return Paths.get(res.toURI()).toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	/*
+	 * Created due to removing class path dependency at 11/02/2022
+	 */
+	public static String getFilePath(String filePath) throws FileNotFoundException {
+		File file =new File(filePath);
+		if(!file.exists()) {
+			throw new FileNotFoundException("No such file found at "+filePath);
+		}
+		return file.getAbsolutePath();
 	}
 
 	public static File getFile(Class<?> resourceClass, String fileName) {
