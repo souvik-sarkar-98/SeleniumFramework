@@ -159,6 +159,7 @@ public final class TestEngine {
 				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
 			} catch (Exception e) {
 				logger.error(e);
+				this.reporter.captureScreenshot(keyword);
 				this.reporter.testCaseFailed(keyword, "Failed to execute", e);
 				if ("TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("IsHeadless")))) {
 					throw e;

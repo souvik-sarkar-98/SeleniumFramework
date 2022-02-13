@@ -33,6 +33,7 @@ public class ReportHelper {
 	public ReportHelper(WebDriver driver) {
 		this.driver = driver;
 		this.reportUtil = new TestReportUtil();
+		new File(screenshotFolder+"/temp").mkdirs();
 	}
 
 	public void addTestActionListener(TestActionListener tl) {
@@ -44,10 +45,12 @@ public class ReportHelper {
 		TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
 		File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
 		File destFile = new File(screenshotFolder+"/temp/" + keyword + ".png");
+		
 		try {
 			FileUtils.copyFile(SrcFile, destFile);
 		} catch (IOException e) {
-		}
+			e.printStackTrace();
+			}
 	}
 
 	public void testCasePassed(String testCaseName, String message) {
@@ -63,13 +66,13 @@ public class ReportHelper {
 	}
 
 	public void saveScreenshot() throws InvalidFormatException, IOException {
-		String fileExtension = String.valueOf(PropertyCache.getProperty("EvidenceFormat"));
-		fileExtension=fileExtension ==null?"docx":fileExtension;
-		String fileName=PropertyCache.getProperty("TestName")+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		String outputFile=null;
-		if(fileExtension.equalsIgnoreCase("docx")) {
-			outputFile=reportUtil.createNewWord(screenshotFolder+"/temp", screenshotFolder,fileName );
-		}
+//		String fileExtension = String.valueOf(PropertyCache.getProperty("EvidenceFormat"));
+//		fileExtension=fileExtension ==null?"docx":fileExtension;
+		String fileName=PropertyCache.getProperty("TestName")+"-"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		String outputFile=reportUtil.createNewWord(screenshotFolder+"/temp", screenshotFolder,fileName );
+//		if(fileExtension.equalsIgnoreCase("docx")) {
+//			outputFile=;
+//		}
 		for (TestActionListener el : listeners) {
 			el.uploadEvidence(outputFile);
 		}
