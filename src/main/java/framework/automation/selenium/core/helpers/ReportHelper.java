@@ -44,7 +44,7 @@ public class ReportHelper {
 
 		TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
 		File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
-		File destFile = new File(screenshotFolder+"/temp/" + keyword + ".png");
+		File destFile = new File(screenshotFolder+"/temp/" + keyword.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " ") + ".png");
 		
 		try {
 			FileUtils.copyFile(SrcFile, destFile);
@@ -68,8 +68,8 @@ public class ReportHelper {
 	public void saveScreenshot() throws InvalidFormatException, IOException {
 //		String fileExtension = String.valueOf(PropertyCache.getProperty("EvidenceFormat"));
 //		fileExtension=fileExtension ==null?"docx":fileExtension;
-		String fileName=PropertyCache.getProperty("TestName")+"-"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		String outputFile=reportUtil.createNewWord(screenshotFolder+"/temp", screenshotFolder,fileName );
+		String fileName=PropertyCache.getProperty("TestName")+" - Run_"+new SimpleDateFormat("dd-MM-yy_HH-mm-ss").format(new Date());
+		String outputFile=reportUtil.createNewWord(screenshotFolder+"/temp", screenshotFolder,fileName.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " ") );
 //		if(fileExtension.equalsIgnoreCase("docx")) {
 //			outputFile=;
 //		}

@@ -192,7 +192,7 @@ public class GenericTestActionLibrary {
 
 	}
 	
-	private void wait(int wait) {
+	public void wait(int wait) {
 		logger.traceEntry("with {}", wait);
 		try {
 			Thread.sleep(wait * 1000);
@@ -206,11 +206,12 @@ public class GenericTestActionLibrary {
 	public void switchWindow() {
 		logger.traceEntry();
 		ArrayList<String> tabs2 = new ArrayList<String>(driver.getWindowHandles());
-		wait(2);
+		//wait(2);
 		driver.close();
 		//wait(2);
 		driver.switchTo().window(tabs2.get(tabs2.size() - 1));
-		wait(2);		driver.manage().window().maximize();
+		//driver.switchTo().frame(tabs2.get(tabs2.size() - 1));
+		//wait(2);		driver.manage().window().maximize();
 		
 		// driver.switchTo().window(tabs2.get(0)).close();;
 		logger.traceExit();

@@ -33,9 +33,9 @@ public class TestReportUtil {
 			InputStream pic;
 			pic = new FileInputStream(files[i].getPath());
 
-			createNewWordRun.setText(files[i].getName());
-			createNewWordRun.addPicture(pic, XWPFDocument.PICTURE_TYPE_PNG, files[i].getName(), Units.toEMU(470),
-					Units.toEMU(265));
+			createNewWordRun.setText(files[i].getName().replace(".png", ""));
+			createNewWordRun.addPicture(pic, XWPFDocument.PICTURE_TYPE_PNG, files[i].getName(), Units.toEMU(500),
+					Units.toEMU(300));
 			pic.close();
 			if (i != files.length - 1) {
 				if (i % 2 == 0)

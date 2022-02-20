@@ -150,6 +150,7 @@ public class Browser {
 		InternetExplorerOptions  options= new InternetExplorerOptions();
 		options.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
 		options.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+		//InternetExplorerDriver.
 		if(this.isIncognito) {
 			options.setCapability("InPrivate",true);
 		}

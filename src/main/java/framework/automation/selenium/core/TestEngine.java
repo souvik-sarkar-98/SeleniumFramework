@@ -96,7 +96,7 @@ public final class TestEngine {
 
 	/**
 	 * @throws Exception
-	 * @purpose
+	 * @purpose 
 	 * @date 27-Mar-2021
 	 */
 	public final void run(TestActionListener tl) throws Exception {
@@ -183,7 +183,8 @@ public final class TestEngine {
 
 				jf.dispose();
 				if (response == 1) {
-					break;
+					throw e;
+					//break;
 				}
 			}
 		}
@@ -191,21 +192,8 @@ public final class TestEngine {
 
 	}
 
-	/*
-	 * private final void validate() throws Exception {
-	 * logger.traceEntry("Validating Keyword"); Map<String, String> list = new
-	 * HashMap<String, String>(); Object[] keywords =
-	 * this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString())
-	 * ; for (Object keyword : keywords) { if (!keyword.equals("")) { String error =
-	 * KeywordProcessor.validateKeyword(keyword.toString(), this.dataHelper); if
-	 * (error != null) { list.put(keyword.toString(), error);
-	 * logger.error(keywords.toString() + " " + error); } //
-	 * System.err.println(keyword +"--"+error ); } }
-	 * 
-	 * logger.traceExit();
-	 * 
-	 * }
-	 */
+	
+	
 
 	/**
 	 * @purpose

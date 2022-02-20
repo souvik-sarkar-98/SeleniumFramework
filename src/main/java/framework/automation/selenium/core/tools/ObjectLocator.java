@@ -78,7 +78,7 @@ public class ObjectLocator {
 				} catch (Exception e) {
 					logger.warn("Loading object not found. Hence skipping loading object check."
 							+ "\nIf you want to check this please make sure that your header object is named '"
-							+ PropertyCache.getProperty("HeaderObjectName") + "'");
+							+ PropertyCache.getProperty("LoadingObjectName") + "'");
 				}
 
 //				wait.until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -123,7 +123,8 @@ public class ObjectLocator {
 	private void highlightElement(WebElement element) {
 		logger.traceEntry("with {}", element.toString());
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].setAttribute('style', 'border: 2px solid blue;');", element);
+		String style=String.valueOf(PropertyCache.getProperty("HighlightStyle"));
+		js.executeScript("arguments[0].setAttribute('style', '"+style+"');", element);
 		logger.traceExit();
 	}
 
