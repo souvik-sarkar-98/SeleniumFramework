@@ -1,6 +1,7 @@
 package framework.automation.selenium.core.tools;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,7 +34,9 @@ public class ObjectLocator {
 	private final Logger logger = LogManager.getLogger(this.getClass());
 	private WebObjectHelper objHelper;
 	private WebDriver driver;
-	private Class<?> testClass;
+	private String repoName;
+	private long explicitWait;
+	// private Class<?> testClass;
 
 	/**
 	 * @param testClass
@@ -43,12 +46,13 @@ public class ObjectLocator {
 	 * @throws XPathExpressionException
 	 * 
 	 */
-	public ObjectLocator(Class<?> testClass, WebDriver driver)
+	public ObjectLocator(/* Class<?> testClass, */ WebDriver driver)
 			throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		logger.traceEntry("with {}", driver.toString());
-		this.testClass = testClass;
-		this.objHelper = new WebObjectHelper(this.testClass);
+		// this.testClass = testClass;
+		this.objHelper = new WebObjectHelper(/* this.testClass */);
 		this.driver = driver;
+		this.explicitWait=Integer.parseInt(String.valueOf(PropertyCache.getProperty("ExplicitWait")));
 		logger.traceExit();
 	}
 
@@ -59,22 +63,53 @@ public class ObjectLocator {
 	 * @return
 	 * @throws WebObjectIdentifierNotFoundException
 	 * @throws XMLElementNotFoundException
+	 * @throws NoSuchElementException
 	 */
 	public WebElement getWebElement(String elementName)
 			throws XMLElementNotFoundException, WebObjectIdentifierNotFoundException {
 		logger.traceEntry("with {}", elementName.toString());
-		WebElement element = null;
 		By[] locators = this.objHelper.getLocators(elementName);
+		try {
+			return getWebElement(locators);
+		} catch (NoSuchElementException e) {
+			e = new NoSuchElementException("No such element named '" + elementName + "' in page '"+repoName+"'  PageTitle: " + driver.getTitle()
+					+ " URL: " + driver.getCurrentUrl());
+			throw e;
+		}
+	}
+
+	/**
+	 * @purpose
+	 * @date 29-Mar-2021
+	 * @param string
+	 * @return
+	 */
+	public WebElement getWebElement(By... locators) {
+		logger.traceEntry("with {}", locators.toString());
+		List<WebElement> list = getWebElements(locators);
+		WebElement element;
+		if (!list.isEmpty()) {
+			element = list.get(0);
+		} else {
+			NoSuchElementException e = new NoSuchElementException("No such element found with locator '" + locators
+					+ "' in page " + driver.getTitle() + " url " + driver.getCurrentUrl());
+			throw e;
+		}
+		logger.traceExit("returning {}", element);
+		return element;
+	}
+
+	public List<WebElement> getWebElements(By... locators) {
+		logger.traceEntry("with {}", locators.toString());
+		List<WebElement> elements = new ArrayList<>();
+
 		for (By locator : locators) {
 			try {
-				WebDriverWait wait = new WebDriverWait(driver,
-						Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
+				WebDriverWait wait = new WebDriverWait(driver,explicitWait);
 				try {
 					By[] loading = this.objHelper
 							.getLocators(String.valueOf(PropertyCache.getProperty("LoadingObjectName")), true);
-					//logger.info("Started");
 					wait.until(ExpectedConditions.invisibilityOfElementLocated(loading[0]));
-					//logger.info("End");
 				} catch (Exception e) {
 					logger.warn("Loading object not found. Hence skipping loading object check."
 							+ "\nIf you want to check this please make sure that your header object is named '"
@@ -84,31 +119,24 @@ public class ObjectLocator {
 //				wait.until(ExpectedConditions.presenceOfElementLocated(locator));
 				wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 
-				// element=
-				List<WebElement> list = driver.findElements(locator);
-				if (!list.isEmpty()) {
-					element = list.get(0);
-					//wait.until(ExpectedConditions.elementToBeClickable(element));
+				elements = driver.findElements(locator);
+				for (WebElement element : elements) {
+					this.highlightElement(element);
 				}
-				this.highlightElement(element);
 				break;
 			} catch (Exception e) {
 				logger.error(e);
 
 			}
 		}
-		if (element == null) {
-			NoSuchElementException e = new NoSuchElementException("No such element named '" + elementName + "' in page "
-					+ driver.getTitle() + " url " + driver.getCurrentUrl());
-			throw e;
-		}
-		logger.traceExit("returning {}", element.toString());
-		return element;
+		logger.traceExit("returning {}", elements);
+		return elements;
 	}
 
 	public void setRepository(String repoName) throws XPathExpressionException, DOMException,
 			ParserConfigurationException, SAXException, IOException, XMLElementNotFoundException {
 		logger.traceEntry("with {}", repoName.toString());
+		this.repoName=repoName;
 		this.objHelper.loadRepository(repoName);
 		try {
 			getWebElement(String.valueOf(PropertyCache.getProperty("HeaderObjectName")));
@@ -123,9 +151,17 @@ public class ObjectLocator {
 	private void highlightElement(WebElement element) {
 		logger.traceEntry("with {}", element.toString());
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		String style=String.valueOf(PropertyCache.getProperty("HighlightStyle"));
-		js.executeScript("arguments[0].setAttribute('style', '"+style+"');", element);
+		String style = String.valueOf(PropertyCache.getProperty("HighlightStyle"));
+		js.executeScript("arguments[0].setAttribute('style', '" + style + "');", element);
 		logger.traceExit();
+	}
+
+	public long getExplicitWait() {
+		return explicitWait;
+	}
+
+	public void setExplicitWait(long explicitWait) {
+		this.explicitWait = explicitWait;
 	}
 
 }

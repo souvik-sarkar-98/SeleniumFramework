@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
 
+import framework.automation.selenium.core.config.PropertyCache;
 import framework.automation.selenium.core.exceptions.InvalidKeywordDataFormatException;
 import framework.automation.selenium.core.exceptions.KeywordParameterMismatchException;
 import framework.automation.selenium.core.exceptions.WebObjectIdentifierNotFoundException;
@@ -33,7 +34,7 @@ public final class KeywordProcessor {
 	protected final ActionPerformer reflect;
 	private final TestDataHelper dataHelper;
 	private ObjectLocator locator;
-	private Class<?> testClass;
+	//private Class<?> testClass;
 
 	/**
 	 * @param testClass 
@@ -47,13 +48,13 @@ public final class KeywordProcessor {
 	 * @throws ParserConfigurationException 
 	 * @throws XPathExpressionException 
 	 */
-	public KeywordProcessor(Class<?> testClass, final WebDriver driver, TestDataHelper dataHelper) throws ClassNotFoundException, FileNotFoundException, InvalidFormatException, IOException, XPathExpressionException, ParserConfigurationException, SAXException {
+	public KeywordProcessor(/*Class<?> testClass,*/ final WebDriver driver, TestDataHelper dataHelper) throws ClassNotFoundException, FileNotFoundException, InvalidFormatException, IOException, XPathExpressionException, ParserConfigurationException, SAXException {
 		logger.traceEntry(" with {}",driver.toString());
-		this.testClass=testClass;
+		//this.testClass=testClass;
 		this.driver = driver;
 		this.dataHelper=dataHelper;
 		this.reflect = new ActionPerformer(this.driver);
-		this.locator= new ObjectLocator(this.testClass,this.driver);
+		this.locator= new ObjectLocator(/*this.testClass,*/this.driver);
 		logger.traceExit();
 	}
 
@@ -90,19 +91,29 @@ public final class KeywordProcessor {
 			} else if (items.length == 1) {
 				this.reflect.perform(action);
 			} else if (items.length == 2 && paramClasses[0].equals(String.class)) {
-				
 				data = dataHelper.getTestData(items[1]);
 				this.reflect.perform(action, data);
 
-			} else if (items.length == 2 && paramClasses[0].equals(WebElement.class)) {
+			} else if (items.length == 2 && paramClasses[0].equals(String[].class)) {
+				data = dataHelper.getTestData(items[1]);
+				Object index=PropertyCache.getProperty("TestDataSplitIndex");
+				this.reflect.perform(action, data.split(index == null?",":index.toString().trim()));
+
+			}else if (items.length == 2 && paramClasses[0].equals(WebElement.class)) {
 				object = this.locator.getWebElement(items[1]);
 				this.reflect.perform(action, object);
 			} else if (items.length == 3) {
 				object = this.locator.getWebElement(items[1]);
 				data = dataHelper.getTestData(items[2]);
-				this.reflect.perform(action, object, data);
+				if(paramClasses[0].equals(String[].class)) {
+					Object index=PropertyCache.getProperty("TestDataSplitIndex");
+					this.reflect.perform(action, data.split(index == null?",":index.toString().trim()));
+				}else {
+					this.reflect.perform(action, object, data);
+				}
 
-			}
+			}//data array pass
+			//
 		}
 		logger.traceExit();
 

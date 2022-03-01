@@ -114,7 +114,7 @@ public final class TestEngine {
 		try {
 			Object[] keywords = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 			this.driver = this.browser.open();
-			this.interpretor = new KeywordProcessor(this.testClass, this.driver, this.dataHelper);
+			this.interpretor = new KeywordProcessor(/*this.testClass,*/ this.driver, this.dataHelper);
 			this.reporter = new ReportHelper(this.driver);
 			if(tl != null) {
 				this.reporter.addTestActionListener(tl);

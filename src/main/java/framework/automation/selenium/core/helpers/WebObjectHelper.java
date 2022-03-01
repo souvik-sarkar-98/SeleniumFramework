@@ -35,7 +35,7 @@ public final class WebObjectHelper {
 	private String objectXML;
 	//private Class<?> testClass;
 
-	public WebObjectHelper(Class<?> testClass) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+	public WebObjectHelper(/*Class<?> testClass*/) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		logger.traceEntry();
 		//this.testClass=testClass;
 		//commenting this
