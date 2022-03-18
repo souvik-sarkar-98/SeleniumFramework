@@ -18,13 +18,15 @@ import framework.automation.selenium.core.config.PropertyCache;
  * @createdOn 27-Mar-2021
  * @purpose
  */
-public class GenericTestActionLibrary {
+public class ActionLibrary {
 	private final WebDriver driver;
 	private final Logger logger = LogManager.getLogger(this.getClass());
+	//private Actions actions;
 
-	public GenericTestActionLibrary(WebDriver driver) {
+	public ActionLibrary(WebDriver driver) {
 		logger.traceEntry("with driver {}", driver);
 		this.driver = driver;
+		//this.actions=new Actions(driver);
 		logger.traceExit();
 	}
 
@@ -36,17 +38,10 @@ public class GenericTestActionLibrary {
 
 	public void click(WebElement element) {
 		logger.traceEntry("with {}", element.toString());
-		// try {
-		//
 		WebDriverWait wait = new WebDriverWait(driver,
 				Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
 		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
-//		}catch(ElementClickInterceptedException e) {
-//			logger.error(e);
-//			//jsClick(element);
-//			Actions actions = new Actions(driver);
-//			actions.moveToElement(element).click().build().perform();
-//		}
+		//this.actions.clickAndHold(element).build().perform();
 		logger.traceExit();
 
 	}
@@ -60,7 +55,6 @@ public class GenericTestActionLibrary {
 
 	public void set(WebElement element, String data) {
 		logger.traceEntry("with {},{}", element.toString(), data);
-		//element.clear();
 		element.sendKeys(data);
 		logger.traceExit();
 	}
@@ -86,9 +80,6 @@ public class GenericTestActionLibrary {
 
 	public void select(WebElement element, String data) {
 		logger.traceEntry("with {},{}", element.toString(), data);
-		// WebDriverWait wait = new WebDriverWait(driver,
-		// Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		// wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
 		if (select.isMultiple()) {
 			logger.debug("Multiple selection applicable.");
@@ -120,9 +111,6 @@ public class GenericTestActionLibrary {
 
 	public void selectByVisibleText(WebElement element, String data) {
 		logger.traceEntry("with {},{}", element.toString(), data);
-		// WebDriverWait wait = new WebDriverWait(driver,
-		// Integer.parseInt(PropertyCache.getProperty("ExplicitWait").toString()));
-		// wait.until(ExpectedConditions.elementToBeSelected(element));
 		Select select = new Select(element);
 		if (select.isMultiple()) {
 			String[] options = data.split(",");
@@ -229,7 +217,7 @@ public class GenericTestActionLibrary {
 		logger.traceEntry();
 		//
 		logger.traceExit();
-		return null;
+		return element.getText();
 
 	}
 

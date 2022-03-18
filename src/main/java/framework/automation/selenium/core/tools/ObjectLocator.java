@@ -14,6 +14,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.w3c.dom.DOMException;
@@ -36,6 +37,7 @@ public class ObjectLocator {
 	private WebDriver driver;
 	private String repoName;
 	private long explicitWait;
+	private Actions actions;
 	// private Class<?> testClass;
 
 	/**
@@ -53,7 +55,9 @@ public class ObjectLocator {
 		this.objHelper = new WebObjectHelper(/* this.testClass */);
 		this.driver = driver;
 		this.explicitWait=Integer.parseInt(String.valueOf(PropertyCache.getProperty("ExplicitWait")));
+		this.actions=new Actions(driver);
 		logger.traceExit();
+		
 	}
 
 	/**
@@ -90,6 +94,7 @@ public class ObjectLocator {
 		WebElement element;
 		if (!list.isEmpty()) {
 			element = list.get(0);
+			this.actions.moveToElement(element).build().perform();
 		} else {
 			NoSuchElementException e = new NoSuchElementException("No such element found with locator '" + locators
 					+ "' in page " + driver.getTitle() + " url " + driver.getCurrentUrl());

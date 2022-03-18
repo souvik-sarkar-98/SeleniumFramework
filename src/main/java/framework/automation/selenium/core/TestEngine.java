@@ -69,7 +69,7 @@ public final class TestEngine {
 			} catch (ResourceConfigurationException | URISyntaxException e) {
 				logger.error(e);
 				throw e;
-			}catch (Exception e) {
+			} catch (Exception e) {
 				logger.error(e);
 				throw e;
 			}
@@ -83,20 +83,20 @@ public final class TestEngine {
 		} catch (InvalidFormatException | IOException e) {
 			logger.error(e);
 			throw e;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			logger.error(e);
 			throw e;
 		}
 		logger.traceExit();
 	}
-	
-	public final void run() throws Exception{
+
+	public final void run() throws Exception {
 		run(null);
 	}
 
 	/**
 	 * @throws Exception
-	 * @purpose 
+	 * @purpose
 	 * @date 27-Mar-2021
 	 */
 	public final void run(TestActionListener tl) throws Exception {
@@ -110,28 +110,33 @@ public final class TestEngine {
 				: "TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("IsIncognito"))));
 		// this.validate();
 
-		 
 		try {
-			Object[] keywords = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
+			Object[] keywordsObj = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 			this.driver = this.browser.open();
-			this.interpretor = new KeywordProcessor(/*this.testClass,*/ this.driver, this.dataHelper);
+			this.interpretor = new KeywordProcessor(/* this.testClass, */ this.driver, this.dataHelper);
 			this.reporter = new ReportHelper(this.driver);
-			if(tl != null) {
+			if (tl != null) {
 				this.reporter.addTestActionListener(tl);
 			}
-			this.execute(Arrays.copyOf(keywords, keywords.length, String[].class));
+			String[] keywords = Arrays.copyOf(keywordsObj, keywordsObj.length, String[].class);
+			for (String keyword : keywords) {
+				if ("".equals(keyword.trim())) {
+					continue;
+				}
+				this.execute(keyword);
+			}
+
 		} catch (ClassNotFoundException | InvalidFormatException | XPathExpressionException | IOException
 				| ParserConfigurationException | SAXException e) {
 			logger.error(e);
 			throw new ResourceConfigurationException(e);
-		}catch (BrowserNotFoundException | NoSuchTestFoundException e) {
+		} catch (BrowserNotFoundException | NoSuchTestFoundException e) {
 			logger.error(e);
 			throw e;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			logger.error(e);
 			throw e;
 		}
-		
 
 		logger.traceExit();
 
@@ -144,56 +149,56 @@ public final class TestEngine {
 	 * @purpose
 	 * @date 27-Mar-2021
 	 */
-	private final void execute(String[] keywords) throws Exception {
+	private final void execute(String keyword) throws Exception {
 		logger.traceEntry("Executing Keyword");
-		for (String keyword : keywords) {
-			if ("".equals(keyword.trim())) {
-				continue;
+		try {
+
+			logger.info(keyword);
+			this.interpretor.interpretAndProcess(keyword);
+			this.reporter.captureScreenshot(keyword);
+			this.reporter.testCasePassed(keyword, "Working as expected");
+			Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
+		} catch (Exception e) {
+			logger.error(e);
+			this.reporter.captureScreenshot(keyword);
+			this.reporter.testCaseFailed(keyword, "Failed to execute", e);
+			if ("TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("IsHeadless")))) {
+				throw e;
 			}
-			try {
+			JFrame jf = new JFrame();
+			jf.setAlwaysOnTop(true);
+			String message = new StringBuilder().append("<html><body><div style='width: 500px;'>")
+					.append("<p style='font-weight: bold;'>Execution of '" + keyword
+							+ "' keyword has failed due to an error.</p>")
+					.append("<p style='font-weight: bold;'>⚫ If you want to continue the test, Perform the step manually and click on 'Continue'."
+							+ "<br>⚫ Click on 'Retry' to perform this keyword again."
+							+ "<br>⚫ Click on 'End' to end the test.</p>")
+					.append("<br>")
+					.append("➼ Error Message : <p style='color:blue;'>"
+							+ (e.getMessage() == null ? "Not available" : e.getMessage()) + "</p>")
+					.append("<br>")
+					.append("➼ Error Cause : <div style='color:red;'>" + (e.getCause() == null ? " Not available"
+							: MiscUtils.addLinebreaks(e.getCause().getMessage(), 300)) + "</div>")
+					.append("</div></body></html>").toString();
 
-				logger.info(keyword);
-				this.interpretor.interpretAndProcess(keyword);
-				this.reporter.captureScreenshot(keyword);
-				this.reporter.testCasePassed(keyword, "Working as expected");
-				Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
-			} catch (Exception e) {
-				logger.error(e);
-				this.reporter.captureScreenshot(keyword);
-				this.reporter.testCaseFailed(keyword, "Failed to execute", e);
-				if ("TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("IsHeadless")))) {
-					throw e;
-				}
-				JFrame jf = new JFrame();
-				jf.setAlwaysOnTop(true);
-				String message = new StringBuilder().append("<html><body><div style='width: 500px;'>")
-						.append("<p style='font-weight: bold;'>Execution of '" + keyword
-								+ "' keyword has failed due to an error.</p>")
-						.append("<p style='font-weight: bold;'>⚫ If you want to continue the test, Perform the step manually and click on 'YES'."
-								+ "<br>⚫ Click on 'NO' to end the test.</p>")
-						.append("<br>").append("➼ Error Message : <p style='color:blue;'>" + (e.getMessage() == null ?"Not available":e.getMessage()) + "</p>")
-						.append("<br>")
-						.append("➼ Error Cause : <div style='color:red;'>" + (e.getCause() == null ? " Not available"
-								: MiscUtils.addLinebreaks(e.getCause().getMessage(), 300)) + "</div>")
-						.append("</div></body></html>").toString();
+			message = message.replaceAll("[\\t\\n\\r]+", "<br>");
+			String[] options = { "Continue", "Retry", "End" };
 
-				message = message.replaceAll("[\\t\\n\\r]+", "<br>");
-				int response = JOptionPane.showConfirmDialog(jf, message, "Warning", JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE);
-
-				jf.dispose();
-				if (response == 1) {
-					throw e;
-					//break;
-				}
+			int response = JOptionPane.showOptionDialog(jf, message, "Warning", JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.WARNING_MESSAGE, null, // no custom icon
+					options, // button titles
+					options[0] // default button
+			);
+			jf.dispose();
+			if (response == 1) {
+				execute(keyword);
+			}else if (response == 2) {
+				throw e;
 			}
 		}
 		logger.traceExit();
 
 	}
-
-	
-	
 
 	/**
 	 * @purpose
@@ -207,7 +212,7 @@ public final class TestEngine {
 		if ("TRUE".equalsIgnoreCase(closeBrowser)) {
 			this.browser.close();
 		}
-		
+
 		try {
 			this.reporter.saveScreenshot();
 		} catch (InvalidFormatException | IOException e) {
@@ -216,9 +221,10 @@ public final class TestEngine {
 		logger.traceExit();
 	}
 
-	public static final void setPropertyFile(File file) throws ResourceConfigurationException{
+	public static final void setPropertyFile(File file) throws ResourceConfigurationException {
 		setPropertyFile(file.getAbsolutePath());
 	}
+
 	/**
 	 * @throws ResourceConfigurationException
 	 * @throws Exception
@@ -250,8 +256,5 @@ public final class TestEngine {
 	public static final void setProperty(String key, Object value) throws NoSuchTestFoundException {
 		PropertyCache.setProperty(key, value);
 	}
-	
-	
-	
 
 }

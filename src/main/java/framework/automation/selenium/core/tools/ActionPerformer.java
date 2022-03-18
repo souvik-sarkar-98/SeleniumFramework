@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import framework.automation.selenium.core.actions.GenericTestActionLibrary;
+import framework.automation.selenium.core.actions.ActionLibrary;
 import framework.automation.selenium.core.config.PropertyCache;
 
 /**
@@ -33,8 +33,8 @@ public class ActionPerformer{
 	public ActionPerformer(final WebDriver driver) throws ClassNotFoundException {
 		logger.traceEntry(" with driver {}",driver.toString());
 		this.driver = driver;
-		logger.debug("Added Internal action class "+GenericTestActionLibrary.class.getName());
-		classObjects.add(GenericTestActionLibrary.class);
+		logger.debug("Added Internal action class "+ActionLibrary.class.getName());
+		classObjects.add(ActionLibrary.class);
 		
 		Object[] all = PropertyCache.getProperties("ExternalActionClasses");
 		for (Object className : all) {
