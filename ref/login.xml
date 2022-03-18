@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository name="LoginPage" createdOn="28/03/2021"
+	createdBy="souvik sarkar">
+	<objects>
+		<object name="header">
+			<identifier locator="xpath" value="//body/main[@id='main']/div[1]/div[1]/div[1]/h1[1]" />
+		</object>
+		<object name="username">
+			<identifier locator="id" value="username" />
+			<identifier locator="xpath" value="//input[@id='username']" />
+		</object>
+		<object name="password">
+			<identifier locator="id" value="password" />
+			<identifier locator="xpath" value="//input[@id='password']" />
+		</object>
+		<object name="Login">
+			<identifier locator="id" value="login" />
+		</object>
+	</objects>
+</repository>

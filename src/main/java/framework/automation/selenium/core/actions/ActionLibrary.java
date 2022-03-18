@@ -42,12 +42,6 @@ public class ActionLibrary {
 		logger.traceExit();
 	}
 	
-	public void openUrl() {
-		logger.traceEntry();
-		String url = String.valueOf(PropertyCache.getProperty("URL"));
-		this.driver.get(url);
-		logger.traceExit();
-	}
 	
 	/*
 	 * Click Actions

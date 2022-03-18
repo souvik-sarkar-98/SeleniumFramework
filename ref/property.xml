@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+	<property name="DataSource">
+		<description></description>
+		<value>src/test/resources/data/MIMOTestSuite.xlsx</value>
+	</property>
+	<property name="URL">
+		<description></description>
+		<value></value>
+	</property>
+	<property name="EnableReporting">
+		<description></description>
+		<value>true</value>
+	</property>
+	<property name="ObjectMappingFile">
+		<description></description>
+		<value>src/test/resources/objects/mapping.xml</value>
+	</property>
+	<property name="DefaultBrowser">
+		<description>"Chrome","Firefox","Opera","Edge","IE"</description>
+		<value>Chrome</value>
+	</property>
+	<property name="IsHeadless">
+		<description>"true","false"</description>
+		<value>FALSE</value>
+	</property>
+	<property name="IsIncognito">
+		<description>"true","false"</description>
+		<value>false</value>
+	</property>
+	<property name="DefaultWait">
+		<description></description>
+		<value>1</value>
+	</property>
+	<property name="ImplicitWait">
+		<description></description>
+		<value>30</value>
+	</property>
+	<property name="ExplicitWait">
+		<description></description>
+		<value>30</value>
+	</property>
+	<property name="StopOnStepFailure">
+		<description></description>
+		<value>false</value>
+	</property>
+	<property name="AutoCloseBrowser">
+		<description>"true","false"</description>
+		<value>true</value>
+	</property>
+	<property name="KeywordSheetName">
+		<description></description>
+		<value>Keywords</value>
+	</property>
+	
+	<!-- <property name="ConsoleLogLevel">
+		<description>ALL, TRACE, DEBUG, INFO, WARN,ERROR, FATAl, OFF</description>
+		<value>error</value>
+	</property> -->
+	<property name="ExternalJavaFilePaths">
+		<description></description>
+		<value></value>
+	</property>
+	<property name="ExternalActionClasses">
+		<description></description>
+		<value>com.oldmutual.testautomation.library.OMSATestActionLibrary</value>
+	</property>
+	<property name="ScreenshotPath">
+		<description></description>
+		<value>test-output/screenshots</value>
+	</property>
+	<property name="LoadingObjectName">
+		<description></description>
+		<value>loader</value>
+	</property>
+	<property name="HeaderObjectName">
+		<description></description>
+		<value>header</value>
+	</property>
+	<property name="HighlightStyle">
+		<description></description>
+		<value>border: 3px solid blue;</value>
+	</property>
+	<property name="TestDataSheetNames">
+		<description></description>
+		<value>TestData,IMED,Mandates</value>
+	</property>
+	<property name="TestDataSplitIndex">
+		<description></description>
+		<value>,</value>
+	</property>
+</properties>

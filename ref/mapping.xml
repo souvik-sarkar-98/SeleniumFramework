@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<descriptions>
+		<description>"id","name","classname","cssselector","linktext","partiallinktext","tagname","xpath"</description>
+	</descriptions>
+	<objectRepositories>
+		<repository name="LoginPage">
+			<path>src/test/resources/objects/pages/login.xml</path>
+		</repository>
+		<repository name="SalesADB">
+			<path>src/test/resources/objects/pages/sales-dashboard.xml</path>
+		</repository>
+		<repository name="ServicingADB">
+			<path>src/test/resources/objects/pages/servicing-dashboard.xml</path>
+		</repository>
+		<repository name="IdentifyCustomerPage">
+			<path>src/test/resources/objects/pages/CE/identify-customer.xml</path>
+		</repository>
+		<repository name="AuthenticateCustomerPage">
+			<path>src/test/resources/objects/pages/CE/authenticate-customer.xml</path>
+		</repository>
+		<repository name="ConsentPage">
+			<path>src/test/resources/objects/pages/CE/request-consent.xml</path>
+		</repository>
+		<repository name="Customer360Page">
+			<path>src/test/resources/objects/pages/CE/customer-360.xml</path>
+		</repository>
+		<repository name="ServiceOptionMenuPage">
+			<path>src/test/resources/objects/pages/CE/service-option-menu.xml</path>
+		</repository>
+		<repository name="ServiceRequestSummaryPage">
+			<path>src/test/resources/objects/pages/CE/service-request-summary.xml</path>
+		</repository>
+		<repository name="CustomerAdviceRecordPage">
+			<path>src/test/resources/objects/pages/CE/customer-advice-record.xml</path>
+		</repository>
+		<repository name="ConcludePage">
+			<path>src/test/resources/objects/pages/CE/conclude.xml</path>
+		</repository>
+		<repository name="WithdrawalsPage">
+			<path>src/test/resources/objects/pages/MIO/withdrawals-page.xml</path>
+		</repository>
+		<repository name="DisinvestmentPage">
+			<path>src/test/resources/objects/pages/MIO/disinvestment-page.xml</path>
+		</repository>
+		<repository name="DisinvestmentSummaryPage">
+			<path>src/test/resources/objects/pages/MIO/disinvestment-summary-page.xml</path>
+		</repository>
+	</objectRepositories>
+</mapping>

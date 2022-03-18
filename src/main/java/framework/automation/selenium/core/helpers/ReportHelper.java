@@ -27,30 +27,37 @@ public class ReportHelper {
 	private WebDriver driver;
 	private List<TestActionListener> listeners = new ArrayList<TestActionListener>();
 	private TestReportUtil reportUtil;
-	private final String screenshotFolder=PropertyCache.getProperty("ScreenshotPath").toString() + "/"
+	private final String screenshotFolder = PropertyCache.getProperty("ScreenshotPath").toString() + "/"
 			+ PropertyCache.getProperty("TestName");
+	private boolean reportingEnabled;
 
 	public ReportHelper(WebDriver driver) {
 		this.driver = driver;
 		this.reportUtil = new TestReportUtil();
-		new File(screenshotFolder+"/temp").mkdirs();
+		new File(screenshotFolder + "/temp").mkdirs();
+		//
+		this.reportingEnabled = "TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("EnableReporting")));
 	}
 
 	public void addTestActionListener(TestActionListener tl) {
-		listeners.add(tl);
+		if (reportingEnabled) {
+			listeners.add(tl);
+		}
 	}
 
 	public void captureScreenshot(String keyword) {
+		if (reportingEnabled) {
+			TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
+			File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+			File destFile = new File(
+					screenshotFolder + "/temp/" + keyword.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " ") + ".png");
 
-		TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
-		File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
-		File destFile = new File(screenshotFolder+"/temp/" + keyword.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " ") + ".png");
-		
-		try {
-			FileUtils.copyFile(SrcFile, destFile);
-		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				FileUtils.copyFile(SrcFile, destFile);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+		}
 	}
 
 	public void testCasePassed(String testCaseName, String message) {
@@ -60,23 +67,29 @@ public class ReportHelper {
 	}
 
 	public void testCaseFailed(String testCaseName, String message, Exception e) {
-		for (TestActionListener el : listeners) {
-			el.failTestCase(testCaseName, message, e);
+		if (reportingEnabled) {
+			for (TestActionListener el : listeners) {
+				el.failTestCase(testCaseName, message, e);
+			}
 		}
 	}
 
 	public void saveScreenshot() throws InvalidFormatException, IOException {
 //		String fileExtension = String.valueOf(PropertyCache.getProperty("EvidenceFormat"));
 //		fileExtension=fileExtension ==null?"docx":fileExtension;
-		String fileName=PropertyCache.getProperty("TestName")+" - Run_"+new SimpleDateFormat("dd-MM-yy_HH-mm-ss").format(new Date());
-		String outputFile=reportUtil.createNewWord(screenshotFolder+"/temp", screenshotFolder,fileName.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " ") );
+		if (reportingEnabled) {
+			String fileName = PropertyCache.getProperty("TestName") + " - Run_"
+					+ new SimpleDateFormat("dd-MM-yy_HH-mm-ss").format(new Date());
+			String outputFile = reportUtil.createNewWord(screenshotFolder + "/temp", screenshotFolder,
+					fileName.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " "));
 //		if(fileExtension.equalsIgnoreCase("docx")) {
 //			outputFile=;
 //		}
-		for (TestActionListener el : listeners) {
-			el.uploadEvidence(outputFile);
+			for (TestActionListener el : listeners) {
+				el.uploadEvidence(outputFile);
+			}
+			FileUtils.forceDelete(new File(screenshotFolder + "/temp"));
 		}
-		FileUtils.forceDelete(new File(screenshotFolder+"/temp"));
 	}
 
 }
