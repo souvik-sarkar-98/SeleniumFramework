@@ -16,11 +16,12 @@ import framework.automation.selenium.core.config.PropertyCache;
 
 /**
  * @author Souvik Sarkar
+ * @param <RandomData>
  * @createdOn 27-Mar-2021
  * @purpose
  * 
  */
-public class ActionPerformer{
+public class ActionPerformer<RandomData>{
 	
     private final Logger logger = LogManager.getLogger(this.getClass());
 	protected List<Class<?>> classObjects = new ArrayList<Class<?>>();
@@ -95,91 +96,52 @@ public class ActionPerformer{
 		return ob;
 	}
 
-	/**
-	 * @purpose 
-	 * @date 28-Mar-2021
-	 * @param action
-	 * @param object
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 */
-	public void perform(String methodName, WebElement object) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public Object perform(String action) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		logger.traceEntry(" with {}",action);
+		CMObject obj=this.getMethod(action);
+		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
+		Object constObj=construct.newInstance(this.driver);
+		logger.info(action);
+		Object result= obj.getMethodObj().invoke(constObj);
+		logger.traceExit();
+		return result;
+		
+	}
+	
+	public Object perform(String methodName, WebElement object) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		logger.traceEntry(" with {},{}",methodName,object.toString());
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
 		logger.info(methodName+" -"+object);
-		obj.getMethodObj().invoke(constObj,object);
+		Object result=obj.getMethodObj().invoke(constObj,object);
 		logger.traceExit();
+		return result;
 	}
 	
-
-	/**
-	 * @purpose 
-	 * @date 28-Mar-2021
-	 * @param action
-	 * @param object
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 */
-	public void perform(String methodName, String data) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	
+	public Object perform(String methodName, String data) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		logger.traceEntry(" with {},{}",methodName,data);
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
 		logger.info(methodName+" "+data);
-		obj.getMethodObj().invoke(constObj,data);
+		Object result= obj.getMethodObj().invoke(constObj,data);
 		logger.traceExit();
+		return result;
 	}
 	
-	/**
-	 * @purpose 
-	 * @date 28-Mar-2021
-	 * @param action
-	 * @param object
-	 * @param data
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 */
-	public void perform(String methodName, WebElement object, String data) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public Object perform(String methodName, WebElement object, String data) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		logger.traceEntry(" with {},{},{}",methodName,object,data);
 		CMObject obj=this.getMethod(methodName);
 		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
 		Object constObj=construct.newInstance(this.driver);
 		logger.info(methodName+" " +data+" to element "+object);
-		obj.getMethodObj().invoke(constObj,object,data);
+		Object result= obj.getMethodObj().invoke(constObj,object,data);
 		logger.traceExit();
+		return result;
 	}
-
-	public void perform(String action) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		logger.traceEntry(" with {}",action);
-		CMObject obj=this.getMethod(action);
-		Constructor<?> construct=obj.getClassObj().getConstructor(WebDriver.class);
-		Object constObj=construct.newInstance(this.driver);
-		logger.info(action);
-		obj.getMethodObj().invoke(constObj);
-		logger.traceExit();
-		
-	}
-	public void perform(String action, String[] split) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
 
 }
 

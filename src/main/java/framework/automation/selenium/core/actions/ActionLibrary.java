@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.github.javafaker.Faker;
+
 import framework.automation.selenium.core.config.PropertyCache;
 
 /**
@@ -29,12 +31,27 @@ public class ActionLibrary {
 		//this.actions=new Actions(driver);
 		logger.traceExit();
 	}
+	
+	/*
+	 * URL Actions
+	 */
 
 	public void openUrl(String url) {
 		logger.traceEntry("with {}", url);
 		this.driver.get(url);
 		logger.traceExit();
 	}
+	
+	public void openUrl() {
+		logger.traceEntry();
+		String url = String.valueOf(PropertyCache.getProperty("URL"));
+		this.driver.get(url);
+		logger.traceExit();
+	}
+	
+	/*
+	 * Click Actions
+	 */
 
 	public void click(WebElement element) {
 		logger.traceEntry("with {}", element.toString());
@@ -52,6 +69,10 @@ public class ActionLibrary {
 		executor.executeScript("arguments[0].click();", element);
 		logger.traceExit();
 	}
+	
+	/*
+	 * Set Actions
+	 */
 
 	public void set(WebElement element, String data) {
 		logger.traceEntry("with {},{}", element.toString(), data);
@@ -65,18 +86,18 @@ public class ActionLibrary {
 		element.sendKeys(data);
 		logger.traceExit();
 	}
-
-	public void clear(WebElement element) {
-		logger.traceEntry("with {}", element.toString());
+	
+	public void setRandom(WebElement element, String data) {
+		logger.traceEntry("with {},{}", element.toString(), data);
 		element.clear();
+		element.sendKeys(getRandomValue(data));
 		logger.traceExit();
 	}
-
-	public void submit(WebElement element) {
-		logger.traceEntry("with {}", element.toString());
-		element.submit();
-		logger.traceExit();
-	}
+	
+	
+	/*
+	 * Select Actions
+	 */
 
 	public void select(WebElement element, String data) {
 		logger.traceEntry("with {},{}", element.toString(), data);
@@ -168,6 +189,22 @@ public class ActionLibrary {
 				"var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text.replace(/\\s+/g, '').toUpperCase() === arguments[1]){ select.options[i].selected = true; } }",
 				element, data);
 	}
+	
+	/*
+	 * Misc Actions
+	 */
+	
+	public void clear(WebElement element) {
+		logger.traceEntry("with {}", element.toString());
+		element.clear();
+		logger.traceExit();
+	}
+
+	public void submit(WebElement element) {
+		logger.traceEntry("with {}", element.toString());
+		element.submit();
+		logger.traceExit();
+	}
 
 	public void wait(String wait) {
 		logger.traceEntry("with {}", wait);
@@ -206,19 +243,37 @@ public class ActionLibrary {
 
 	}
 	
-	public void storeInnertext() {
-		logger.traceEntry();
-		//
-		logger.traceExit();
-
-	}
-	
-	public String getInnertext(WebElement element) {
+	public String storeInnertext(WebElement element,String key) {
 		logger.traceEntry();
 		//
 		logger.traceExit();
 		return element.getText();
 
+	}
+	
+	/*
+	 * Helpers methods
+	 */
+	
+	private String getRandomValue(String type) {
+		Faker faker=new Faker();
+		switch(type.toLowerCase()) {
+		case "title":
+			return faker.name().prefix();
+		case "firstname":
+			return faker.name().firstName();
+		case "middlename":
+			String[] name=faker.name().nameWithMiddle().split(" ");
+			return name.length > 1 ? name[1] : faker.name().firstName();
+		case "lastname":
+			return faker.name().lastName();
+		case "fullname":
+			return faker.name().fullName();
+		case "email":
+			return faker.internet().emailAddress();
+		default:
+			return type;
+		}
 	}
 
 }

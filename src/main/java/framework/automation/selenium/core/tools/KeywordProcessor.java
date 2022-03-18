@@ -16,7 +16,6 @@ import org.openqa.selenium.WebElement;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
 
-import framework.automation.selenium.core.config.PropertyCache;
 import framework.automation.selenium.core.exceptions.InvalidKeywordDataFormatException;
 import framework.automation.selenium.core.exceptions.KeywordParameterMismatchException;
 import framework.automation.selenium.core.exceptions.WebObjectIdentifierNotFoundException;
@@ -31,7 +30,7 @@ import framework.automation.selenium.core.helpers.TestDataHelper;
 public final class KeywordProcessor {
     private final Logger logger = LogManager.getLogger(this.getClass());
 	protected final WebDriver driver;
-	protected final ActionPerformer reflect;
+	protected final ActionPerformer<?> reflect;
 	private final TestDataHelper dataHelper;
 	private ObjectLocator locator;
 	//private Class<?> testClass;
@@ -53,7 +52,7 @@ public final class KeywordProcessor {
 		//this.testClass=testClass;
 		this.driver = driver;
 		this.dataHelper=dataHelper;
-		this.reflect = new ActionPerformer(this.driver);
+		this.reflect = new ActionPerformer<>(this.driver);
 		this.locator= new ObjectLocator(/*this.testClass,*/this.driver);
 		logger.traceExit();
 	}
@@ -88,32 +87,21 @@ public final class KeywordProcessor {
 						+ (items.length - 1) + " arguments are given.");
 				logger.error(e);
 				throw e;
-			} else if (items.length == 1) {
+			} else if (items.length == 1) { //No Argument method
 				this.reflect.perform(action);
-			} else if (items.length == 2 && paramClasses[0].equals(String.class)) {
+				
+			} else if (items.length == 2 && paramClasses[0].equals(String.class)) { //1 Argument method of type String
 				data = dataHelper.getTestData(items[1]);
 				this.reflect.perform(action, data);
-
-			} else if (items.length == 2 && paramClasses[0].equals(String[].class)) {
-				data = dataHelper.getTestData(items[1]);
-				Object index=PropertyCache.getProperty("TestDataSplitIndex");
-				this.reflect.perform(action, data.split(index == null?",":index.toString().trim()));
-
-			}else if (items.length == 2 && paramClasses[0].equals(WebElement.class)) {
+				
+			}else if (items.length == 2 && paramClasses[0].equals(WebElement.class)) { //1 Argument method of type WebElement
 				object = this.locator.getWebElement(items[1]);
 				this.reflect.perform(action, object);
-			} else if (items.length == 3) {
+			} else if (items.length == 3) { //2 Argument method of type WebElement and String
 				object = this.locator.getWebElement(items[1]);
 				data = dataHelper.getTestData(items[2]);
-				if(paramClasses[0].equals(String[].class)) {
-					Object index=PropertyCache.getProperty("TestDataSplitIndex");
-					this.reflect.perform(action, data.split(index == null?",":index.toString().trim()));
-				}else {
-					this.reflect.perform(action, object, data);
-				}
-
-			}//data array pass
-			//
+				this.reflect.perform(action, object, data);
+			}
 		}
 		logger.traceExit();
 
