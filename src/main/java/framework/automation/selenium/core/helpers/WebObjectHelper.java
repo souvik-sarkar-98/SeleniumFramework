@@ -32,7 +32,7 @@ public final class WebObjectHelper {
 	private XMLUtil mappingUtil;
 	private XMLUtil objectUtil;
 	private String mappingXml;
-	private String objectXML;
+	private List<String> objXMLFilePaths;
 	//private Class<?> testClass;
 
 	public WebObjectHelper(/*Class<?> testClass*/) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
@@ -66,11 +66,12 @@ public final class WebObjectHelper {
 			logger.error(e);
 			 throw e;
 		}
-		this.objectXML = mappingNode.item(0).getTextContent();
-		//removed on 11/02/2022 for removing class path dependency
-		//this.objectXML=MiscUtils.getFilePath(this.testClass,this.objectXML);
-		this.objectXML=MiscUtils.getFilePath(this.objectXML);
-		this.objectUtil = new XMLUtil(this.objectXML);
+		//this.objectXML = mappingNode.item(0).getTextContent();
+		this.objXMLFilePaths=new ArrayList<>();
+		for(int i=0;i<mappingNode.getLength();i++) {
+			this.objXMLFilePaths.add(MiscUtils.getFilePath(mappingNode.item(i).getTextContent()));
+		}
+		this.objectUtil = new XMLUtil(this.objXMLFilePaths.toArray(new String[this.objXMLFilePaths.size()]));
 		logger.traceExit();
 	}
 	
@@ -94,7 +95,7 @@ public final class WebObjectHelper {
 		NodeList nodes = this.objectUtil.findNodeListByTags("object", "name", elementName, "identifier");
 		if (nodes == null && ignoreError == false) {
 			XMLElementNotFoundException e= new XMLElementNotFoundException(
-					"No such object element '" + elementName + "' defined in " + this.objectXML);
+					"No such object element '" + elementName + "' defined in " + this.objXMLFilePaths);
 			logger.error(e);
 			throw e;
 		}

@@ -1,12 +1,12 @@
 package framework.automation.selenium.core.actions;
 
 import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,12 +23,12 @@ import framework.automation.selenium.core.config.PropertyCache;
 public class ActionLibrary {
 	private final WebDriver driver;
 	private final Logger logger = LogManager.getLogger(this.getClass());
-	//private Actions actions;
+	private Actions actions;
 
 	public ActionLibrary(WebDriver driver) {
 		logger.traceEntry("with driver {}", driver);
 		this.driver = driver;
-		//this.actions=new Actions(driver);
+		this.actions=new Actions(driver);
 		logger.traceExit();
 	}
 	
@@ -63,6 +63,8 @@ public class ActionLibrary {
 		executor.executeScript("arguments[0].click();", element);
 		logger.traceExit();
 	}
+	
+	
 	
 	/*
 	 * Set Actions
@@ -237,9 +239,17 @@ public class ActionLibrary {
 
 	}
 	
-	public String storeInnertext(WebElement element,String key) {
+	public void check(WebElement element) {
+		logger.traceEntry("with {}", element);
+		actions.moveToElement(element).build().perform();
+		wait(1);
+		logger.traceExit();
+
+	}
+	
+	public String storeInnerText(WebElement element,String key) {
 		logger.traceEntry();
-		//
+		PropertyCache.setProperty(key, element.getText());
 		logger.traceExit();
 		return element.getText();
 
@@ -250,24 +260,44 @@ public class ActionLibrary {
 	 */
 	
 	private String getRandomValue(String type) {
+		String[] args=type.toLowerCase().trim().split(",");
 		Faker faker=new Faker();
-		switch(type.toLowerCase()) {
-		case "title":
+		switch(args[0]) {
+		case "randomtitle":
 			return faker.name().prefix();
-		case "firstname":
+		case "randomfirstname":
 			return faker.name().firstName();
-		case "middlename":
+		case "randommiddlename":
 			String[] name=faker.name().nameWithMiddle().split(" ");
 			return name.length > 1 ? name[1] : faker.name().firstName();
-		case "lastname":
+		case "randomlastname":
 			return faker.name().lastName();
-		case "fullname":
+		case "randomfullname":
 			return faker.name().fullName();
-		case "email":
+		case "randomemail":
+			if(args.length>1) {
+				return faker.bothify(/*"??????????##@"+*/args[1]);
+			}
 			return faker.internet().emailAddress();
+		case "randomphonenumber":
+			if(args.length>1) {
+				return faker.number().digits(Integer.parseInt(args[1]));
+			}
+			return faker.phoneNumber().phoneNumber();
+		case "randomstring":
+			if(args.length>1) {
+				return faker.lorem().fixedString(Integer.parseInt(args[1]));
+			}
+			return faker.letterify("?????????????");
+		case "randomcity":
+			return faker.address().cityName();
+		case "randomsentence":
+			return faker.lorem().sentence();
 		default:
 			return type;
 		}
 	}
+	
+	
 
 }

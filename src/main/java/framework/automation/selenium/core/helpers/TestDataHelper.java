@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +27,7 @@ public final class TestDataHelper {
 	private ExcelUtils excel;
 	private String datasource;
 	private Map<String, String> keywordProblems = new HashMap<String, String>();
+	private List<String> testDataSheets;
 
 	public TestDataHelper(Class<?> testClass) throws FileNotFoundException, InvalidFormatException, IOException {
 		logger.traceEntry();
@@ -32,6 +35,9 @@ public final class TestDataHelper {
 		// String.valueOf(PropertyCache.getProperty("DataSource")));
 		this.datasource = String.valueOf(PropertyCache.getProperty("DataSource"));
 		this.excel = new ExcelUtils(this.datasource);
+		
+		String keywordSheetName = String.valueOf(PropertyCache.getProperty("KeywordSheetName"));
+		this.testDataSheets=this.excel.getSheets().stream().filter(f->!f.equalsIgnoreCase(keywordSheetName)).collect(Collectors.toList());
 		logger.traceExit();
 
 	}
@@ -54,10 +60,10 @@ public final class TestDataHelper {
 
 	public String getTestData(String data) throws InvalidKeywordDataFormatException {
 		logger.traceEntry(" with parameter {}", data);
-		String[] sheetNames = PropertyCache.getProperty("TestDataSheetNames").toString().split(",");
-		//System.err.println(Arrays.asList(sheetNames));
+		//String[] sheetNames = PropertyCache.getProperty("TestDataSheetNames").toString().split(",");
+		
 		String retVal = null;
-		for(String sheetName : sheetNames) {
+		for(String sheetName : testDataSheets) {
 			//System.err.println(sheetName);
 			this.excel.setSheet(sheetName);
 			data = data.trim();
@@ -65,7 +71,7 @@ public final class TestDataHelper {
 			logger.debug("Splitting data ... {}", Arrays.asList(splits));
 			logger.debug("Splitted Data lenght "+splits.length);
 			if(splits.length == 1) {
-				retVal= data.trim();
+				retVal= checkIfEnvVariable(data);
 			}
 			else if (splits.length == 2) {
 				Object value=this.excel.getCellValue(splits[0], splits[1]);
@@ -163,5 +169,13 @@ public final class TestDataHelper {
 	 * throw e; } retVal=retVal.toString().replace("\"","").replace("'", "");
 	 * logger.traceExit("returning {}",data); return retVal.toString(); } }
 	 */
+	
+	private String checkIfEnvVariable(String text) {
+		text=text.trim();
+		if(text.startsWith("{{") && text.endsWith("}}")) {
+			return String.valueOf(PropertyCache.getProperty(text.substring(2,text.length()-2).trim()));
+		}
+		return text;
+	}
 
 }

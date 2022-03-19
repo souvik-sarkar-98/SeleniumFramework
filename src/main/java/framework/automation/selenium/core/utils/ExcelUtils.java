@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -144,6 +145,14 @@ public class ExcelUtils {
 	 */
 	public void setSheet(String sheetName) {
 		this.sheet = this.workbook.getSheet(sheetName);
+	}
+	
+	public List<String> getSheets() {
+		List<String> sheetNames = new ArrayList<String>();
+		for (int i=0; i<this.workbook.getNumberOfSheets(); i++) {
+		    sheetNames.add( this.workbook.getSheetName(i) );
+		}
+		return sheetNames;
 	}
 	
 	public void addCommentsByCellContent(String rowHeaderText,Map<String, String> comments) {

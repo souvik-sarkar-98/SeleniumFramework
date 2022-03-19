@@ -56,6 +56,7 @@ public class ObjectLocator {
 		this.driver = driver;
 		this.explicitWait=Integer.parseInt(String.valueOf(PropertyCache.getProperty("ExplicitWait")));
 		this.actions=new Actions(driver);
+		
 		logger.traceExit();
 		
 	}
@@ -110,23 +111,16 @@ public class ObjectLocator {
 
 		for (By locator : locators) {
 			try {
+				
 				WebDriverWait wait = new WebDriverWait(driver,explicitWait);
-				try {
-					By[] loading = this.objHelper
-							.getLocators(String.valueOf(PropertyCache.getProperty("LoadingObjectName")), true);
-					wait.until(ExpectedConditions.invisibilityOfElementLocated(loading[0]));
-				} catch (Exception e) {
-					logger.warn("Loading object not found. Hence skipping loading object check."
-							+ "\nIf you want to check this please make sure that your header object is named '"
-							+ PropertyCache.getProperty("LoadingObjectName") + "'");
-				}
-
 //				wait.until(ExpectedConditions.presenceOfElementLocated(locator));
 				wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 
 				elements = driver.findElements(locator);
 				for (WebElement element : elements) {
 					this.highlightElement(element);
+					this.actions.moveToElement(element).build().perform();
+
 				}
 				break;
 			} catch (Exception e) {
@@ -144,10 +138,12 @@ public class ObjectLocator {
 		this.repoName=repoName;
 		this.objHelper.loadRepository(repoName);
 		try {
-			getWebElement(String.valueOf(PropertyCache.getProperty("HeaderObjectName")));
+			//getWebElement(String.valueOf(PropertyCache.getProperty("HeaderObjectName")));
+			By[] locators = this.objHelper.getLocators(String.valueOf(PropertyCache.getProperty("HeaderObjectName")),true);
+			getWebElements(locators);
 		} catch (Exception e) {
-			logger.warn("Header object not found. Hence skipping header object check. "
-					+ "\nIf you want to check this please make sure that your header object is named '"
+			logger.info("Header object not found. Hence skipping header object check."
+					+ "If you want to check this please make sure that your header object is named '"
 					+ PropertyCache.getProperty("HeaderObjectName") + "'");
 		}
 		logger.traceExit();

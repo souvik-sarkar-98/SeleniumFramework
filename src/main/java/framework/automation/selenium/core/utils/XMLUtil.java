@@ -2,6 +2,9 @@ package framework.automation.selenium.core.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -24,26 +27,30 @@ import framework.automation.selenium.core.exceptions.XMLElementNotFoundException
  */
 public class XMLUtil {
 
-	private Document document;
+	private List<Document> documents=new ArrayList<>();
 	private XPath xPath;
 
-	public XMLUtil(String filePath)
+	public XMLUtil(String... filePaths)
 			throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-		
-		this.document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filePath));
-		this.document.getDocumentElement().normalize();
+		for(String filePath:filePaths) {
+			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filePath));
+			doc.getDocumentElement().normalize();
+			documents.add(doc);
+		}
 		this.xPath = XPathFactory.newInstance().newXPath();
 	}
 
 	public NodeList findNodeListByTags(String nodeTagName, String attributeName,String attributvalue, String expectedNodes)
 			 {
-		NodeList nodeList = this.document.getElementsByTagName(nodeTagName);
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node node = nodeList.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				Element element = (Element) node;
-				if (element.getAttribute(attributeName).equalsIgnoreCase(attributvalue)) {
-					return element.getElementsByTagName(expectedNodes);
+		for(Document document:documents) {
+			NodeList nodeList = document.getElementsByTagName(nodeTagName);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node node = nodeList.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+					if (element.getAttribute(attributeName).equalsIgnoreCase(attributvalue)) {
+						return element.getElementsByTagName(expectedNodes);
+					}
 				}
 			}
 		}
@@ -52,11 +59,13 @@ public class XMLUtil {
 
 	public NodeList findNodeListByXpath(String xPath, String expectedNodes)
 			throws XPathExpressionException, XMLElementNotFoundException {
-		NodeList nodeList = (NodeList) this.xPath.compile(xPath).evaluate(this.document, XPathConstants.NODESET);
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node node = nodeList.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				return ((Element) node).getElementsByTagName(expectedNodes);
+		for(Document document:documents) {
+			NodeList nodeList = (NodeList) this.xPath.compile(xPath).evaluate(document, XPathConstants.NODESET);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node node = nodeList.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					return ((Element) node).getElementsByTagName(expectedNodes);
+				}
 			}
 		}
 		return null;
