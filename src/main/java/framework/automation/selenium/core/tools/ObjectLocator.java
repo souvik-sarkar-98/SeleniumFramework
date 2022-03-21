@@ -95,7 +95,13 @@ public class ObjectLocator {
 		WebElement element;
 		if (!list.isEmpty()) {
 			element = list.get(0);
-			this.actions.moveToElement(element).build().perform();
+//			for(int i=0;i<list.size();i++) {
+//				if(list.get(i).isDisplayed()) {
+//					element=list.get(i);
+//					this.actions.moveToElement(element).build().perform();
+//					break;
+//				}
+//			}
 		} else {
 			NoSuchElementException e = new NoSuchElementException("No such element found with locator '" + locators
 					+ "' in page " + driver.getTitle() + " url " + driver.getCurrentUrl());
@@ -120,7 +126,6 @@ public class ObjectLocator {
 				for (WebElement element : elements) {
 					this.highlightElement(element);
 					this.actions.moveToElement(element).build().perform();
-
 				}
 				break;
 			} catch (Exception e) {

@@ -55,10 +55,12 @@ public class Browser {
 		driver.manage().deleteAllCookies();
 		//System.err.println(PropertyCache.getProperty("ImplicitWait").toString());
 		driver.manage().timeouts().implicitlyWait(Integer.parseInt(PropertyCache.getProperty("ImplicitWait").toString()), TimeUnit.SECONDS);
+		/*
 		String url = String.valueOf(PropertyCache.getProperty("URL"));
 		if(url!=null) {
 			driver.get(url);
 		}
+		*/
 		logger.traceExit("returning {}",driver);
 		return driver;
 
