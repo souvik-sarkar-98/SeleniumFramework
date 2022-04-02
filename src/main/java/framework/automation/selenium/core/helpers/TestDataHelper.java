@@ -16,6 +16,7 @@ import framework.automation.selenium.core.config.PropertyCache;
 import framework.automation.selenium.core.exceptions.InvalidKeywordDataFormatException;
 import framework.automation.selenium.core.exceptions.NoSuchTestFoundException;
 import framework.automation.selenium.core.utils.ExcelUtils;
+import framework.automation.selenium.core.utils.MiscUtils;
 
 /**
  * @author Souvik Sarkar
@@ -42,11 +43,11 @@ public final class TestDataHelper {
 
 	}
 
-	public Object[] getKeywords(String testName) throws NoSuchTestFoundException {
+	public String[] getKeywords(String testName) throws NoSuchTestFoundException {
 		logger.traceEntry(" with parameter {}", testName);
 		String sheetName = PropertyCache.getProperty("KeywordSheetName").toString();
 		this.excel.setSheet(sheetName);
-		Object[] keywords = this.excel.getEntireRowValues(testName, 1, 0);
+		String[] keywords = this.excel.getEntireRowValues(testName, 1, 0);
 		if (keywords.length == 0) {
 			NoSuchTestFoundException e = new NoSuchTestFoundException(
 					"No test named '" + testName + "' found at '" + sheetName + "' sheet in '" + this.datasource);
@@ -71,7 +72,7 @@ public final class TestDataHelper {
 			logger.debug("Splitting data ... {}", Arrays.asList(splits));
 			logger.debug("Splitted Data lenght "+splits.length);
 			if(splits.length == 1) {
-				retVal= checkIfEnvVariable(data);
+				retVal= MiscUtils.checkIfEnvVariable(data);
 			}
 			else if (splits.length == 2) {
 				Object value=this.excel.getCellValue(splits[0], splits[1]);
@@ -170,12 +171,6 @@ public final class TestDataHelper {
 	 * logger.traceExit("returning {}",data); return retVal.toString(); } }
 	 */
 	
-	private String checkIfEnvVariable(String text) {
-		text=text.trim();
-		if(text.startsWith("{{") && text.endsWith("}}")) {
-			return String.valueOf(PropertyCache.getProperty(text.substring(2,text.length()-2).trim()));
-		}
-		return text;
-	}
+	
 
 }

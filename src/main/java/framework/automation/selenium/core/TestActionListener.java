@@ -1,6 +1,8 @@
 package framework.automation.selenium.core;
 public interface TestActionListener {
-	void failTestCase(String testCaseName,String message,Exception e);
-	void passTestCase(String testCaseName, String message);
+	default void failTestCase(String testCaseName,String message,Exception e) {}
+	default void passTestCase(String testCaseName, String message) {}
+	void failTestCase(String testCaseName,String message,Exception e,String screenshotPath);
+	void passTestCase(String testCaseName, String message,String screenshotPath);
 	void uploadEvidence(String fileName);
 }

@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 
 import org.apache.logging.log4j.Level;
 
+import framework.automation.selenium.core.config.PropertyCache;
+
 /**
  * @author Souvik Sarkar
  * @createdOn 25-May-2021
@@ -91,5 +93,13 @@ public class MiscUtils {
 		default:
 			return Level.INFO;	
 		}
+	}
+	
+	public static String checkIfEnvVariable(String text) {
+		text=text.trim();
+		if(text.startsWith("{{") && text.endsWith("}}")) {
+			return String.valueOf(PropertyCache.getProperty(text.substring(2,text.length()-2).trim()));
+		}
+		return text;
 	}
 }

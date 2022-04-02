@@ -102,7 +102,17 @@ public final class WebObjectHelper {
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Element elem = (Element) nodes.item(i);
 			try {
-				By obj=this.createByObject(elem.getAttribute("locator"), elem.getAttribute("value"));
+				String locatorValue=elem.getAttribute("value");
+				NodeList parameters=elem.getElementsByTagName("parameter");
+				if(parameters.getLength() > 0) {
+					for(int j=0; j< parameters.getLength(); j++) {
+						Element paramElem = (Element) parameters.item(j);
+						locatorValue=locatorValue.replace(paramElem.getAttribute("name"), MiscUtils.checkIfEnvVariable(paramElem.getAttribute("value")));
+						
+					}
+				}
+
+				By obj=this.createByObject(elem.getAttribute("locator"), locatorValue);
 				logger.debug(obj.toString());
 				locators.add(obj);
 			} catch (InvalidLocatorTypeException e) {

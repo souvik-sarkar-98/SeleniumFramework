@@ -57,9 +57,9 @@ public class ExcelUtils {
 		log.traceExit();
 	}
 
-	public Object[] getEntireRowValues(String rowHeaderText, int columnPickupStartIndex, int headerIndex) {
+	public String[] getEntireRowValues(String rowHeaderText, int columnPickupStartIndex, int headerIndex) {
 		log.traceEntry();
-		ArrayList<Object> steps = new ArrayList<Object>();
+		ArrayList<String> steps = new ArrayList<String>();
 		int rowInd=this.getRowHeaderIndex(rowHeaderText, headerIndex);
 		if(rowInd>=0) {
 			Iterator<Cell> col =  this.sheet.getRow(rowInd).cellIterator();
@@ -71,7 +71,7 @@ public class ExcelUtils {
 			}
 		}
 		log.traceExit();
-		return steps.toArray();
+		return steps.toArray(new String[steps.size()]);
 	}
 
 	public Object[] getEntireColumnValues(String columnHeaderText, int rowPickupStartIndex,int headerIndex) {

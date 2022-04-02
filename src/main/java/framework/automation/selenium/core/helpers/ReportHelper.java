@@ -45,7 +45,7 @@ public class ReportHelper {
 		}
 	}
 
-	public void captureScreenshot(String keyword) {
+	public String captureScreenshot(String keyword) {
 		if (reportingEnabled) {
 			TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
 			File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
@@ -54,10 +54,13 @@ public class ReportHelper {
 
 			try {
 				FileUtils.copyFile(SrcFile, destFile);
+				return destFile.getAbsolutePath();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		}
+		return null;
 	}
 
 	public void testCasePassed(String testCaseName, String message) {
@@ -70,6 +73,19 @@ public class ReportHelper {
 		if (reportingEnabled) {
 			for (TestActionListener el : listeners) {
 				el.failTestCase(testCaseName, message, e);
+			}
+		}
+	}
+	public void testCasePassed(String testCaseName, String message,String img) {
+		for (TestActionListener el : listeners) {
+			el.passTestCase(testCaseName, message,img);
+		}
+	}
+
+	public void testCaseFailed(String testCaseName, String message, Exception e,String img) {
+		if (reportingEnabled) {
+			for (TestActionListener el : listeners) {
+				el.failTestCase(testCaseName, message, e,img);
 			}
 		}
 	}

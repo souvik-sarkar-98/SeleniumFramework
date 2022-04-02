@@ -2,12 +2,10 @@ package framework.automation.selenium.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -60,15 +58,13 @@ public final class TestEngine {
 
 		if (TestEngine.prop == null) {
 			try {
-				TestEngine.setPropertyFile(String.valueOf(Paths.get(testClass.getResource("property.xml").toURI())));
+				String.valueOf(Paths.get(testClass.getResource("property.xml").toURI()));
 			} catch (NullPointerException e) {
 				logger.error(e);
 				throw new PropertyNotConfiguredException("No 'property.xml' file found at default location'"
 						+ testClass.getPackage().getName().replace(".", "\\") + "'" + " under test resources folder.\n"
 						+ "Use 'TestEngine.setPropertyFile(filepath)' before creating TestEngine instance.  ");
-			} catch (ResourceConfigurationException | URISyntaxException e) {
-				logger.error(e);
-				throw e;
+
 			} catch (Exception e) {
 				logger.error(e);
 				throw e;
@@ -111,14 +107,14 @@ public final class TestEngine {
 		// this.validate();
 
 		try {
-			Object[] keywordsObj = this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
+			String[] keywords= this.dataHelper.getKeywords(PropertyCache.getProperty("TestName").toString());
 			this.driver = this.browser.open();
 			this.interpretor = new KeywordProcessor(/* this.testClass, */ this.driver, this.dataHelper);
 			this.reporter = new ReportHelper(this.driver);
 			if (tl != null) {
 				this.reporter.addTestActionListener(tl);
 			}
-			String[] keywords = Arrays.copyOf(keywordsObj, keywordsObj.length, String[].class);
+			//String[] keywords = Arrays.copyOf(keywordsObj, keywordsObj.length, String[].class);
 			for (String keyword : keywords) {
 				if ("".equals(keyword.trim())) {
 					continue;
@@ -155,44 +151,21 @@ public final class TestEngine {
 
 			logger.info(keyword);
 			this.interpretor.interpretAndProcess(keyword);
-			this.reporter.captureScreenshot(keyword);
-			this.reporter.testCasePassed(keyword, "Working as expected");
+			String img=this.reporter.captureScreenshot(keyword);
+			this.reporter.testCasePassed(keyword, "Working as expected",img);
 			Thread.sleep(Integer.parseInt(PropertyCache.getProperty("DefaultWait").toString()) * 1000);
 		} catch (Exception e) {
 			logger.error(e);
-			this.reporter.captureScreenshot(keyword);
-			this.reporter.testCaseFailed(keyword, "Failed to execute", e);
+			String img=this.reporter.captureScreenshot(keyword);
+			this.reporter.testCaseFailed(keyword, "Failed to execute", e,img);
 			if ("TRUE".equalsIgnoreCase(String.valueOf(PropertyCache.getProperty("IsHeadless")))) {
 				throw e;
 			}
-			JFrame jf = new JFrame();
-			jf.setAlwaysOnTop(true);
-			String message = new StringBuilder().append("<html><body><div style='width: 500px;'>")
-					.append("<p style='font-weight: bold;'>Execution of '" + keyword
-							+ "' keyword has failed due to an error.</p>")
-					.append("<p style='font-weight: bold;'>⚫ If you want to continue the test, Perform the step manually and click on 'Continue'."
-							+ "<br>⚫ Click on 'Retry' to perform this keyword again."
-							+ "<br>⚫ Click on 'End' to end the test.</p>")
-					.append("<br>")
-					.append("➼ Error Message : <p style='color:blue;'>"
-							+ (e.getMessage() == null ? "Not available" : e.getMessage()) + "</p>")
-					.append("<br>")
-					.append("➼ Error Cause : <div style='color:red;'>" + (e.getCause() == null ? " Not available"
-							: MiscUtils.addLinebreaks(e.getCause().getMessage(), 300)) + "</div>")
-					.append("</div></body></html>").toString();
-
-			message = message.replaceAll("[\\t\\n\\r]+", "<br>");
-			String[] options = { "Continue", "Retry", "End" };
-
-			int response = JOptionPane.showOptionDialog(jf, message, "Warning", JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.WARNING_MESSAGE, null, // no custom icon
-					options, // button titles
-					options[0] // default button
-			);
-			jf.dispose();
+			int response =showPopupError(keyword,e);
+			
 			if (response == 1) {
 				execute(keyword);
-			}else if (response == 2) {
+			} else if (response == 2) {
 				throw e;
 			}
 		}
@@ -255,6 +228,42 @@ public final class TestEngine {
 
 	public static final void setProperty(String key, Object value) throws NoSuchTestFoundException {
 		PropertyCache.setProperty(key, value);
+	}
+	
+	
+	private static int showPopupError(String keyword,Exception e1) {
+		
+		JFrame jf = new JFrame();
+		jf.setAlwaysOnTop(true);
+		String message = new StringBuilder().append("<html><body><div style='width: 500px;'>")
+				.append("<p style='font-weight: bold;'>Execution of '" + keyword
+						+ "' keyword has failed due to an error.</p>")
+				.append("<p style='font-weight: bold;'>⚫ If you want to continue the test, Perform the step manually and click on 'Continue'."
+						+ "<br>⚫ Click on 'Retry' to perform this keyword again."
+						+ "<br>⚫ Click on 'End' to end the test.</p>")
+				.append("<br>")
+				.append("➼ Error Message : <p style='color:blue;'>"
+						+ (e1.getMessage() == null ? "Not available" : e1.getMessage()) + "</p>")
+				.append("<br>")
+				.append("➼ Error Cause : <div style='color:red;'>" + (e1.getCause() == null ? " Not available"
+						: MiscUtils.addLinebreaks(e1.getCause().getMessage(), 300)) + "</div>")
+				.append("</div></body></html>").toString();
+
+		message = message.replaceAll("[\\t\\n\\r]+", "<br>");
+		String[] options = { "Continue", "Retry", "End" };
+		Timer timer = new Timer(5000, (e) -> {
+			jf.dispose();
+			JOptionPane.getRootFrame().dispose();
+		});
+		timer.start();
+		int response = JOptionPane.showOptionDialog(jf, message, "Warning", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE, null, // no custom icon
+				options, // button titles
+				options[0] // default button
+		);
+		jf.dispose();
+		timer.stop();
+		return response;
 	}
 
 }
