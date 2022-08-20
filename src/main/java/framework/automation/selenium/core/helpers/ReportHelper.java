@@ -46,8 +46,9 @@ public class ReportHelper {
 	}
 
 	public String captureScreenshot(String keyword) {
+		TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
+
 		if (reportingEnabled) {
-			TakesScreenshot scrShot = ((TakesScreenshot) this.driver);
 			File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
 			File destFile = new File(
 					screenshotFolder + "/temp/" + keyword.replaceAll("[^a-zA-Z0-9\\.\\-\\s\\_]", " ") + ".png");
@@ -58,9 +59,8 @@ public class ReportHelper {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
-		return null;
+		return scrShot.getScreenshotAs(OutputType.BASE64);
 	}
 
 	public void testCasePassed(String testCaseName, String message) {
